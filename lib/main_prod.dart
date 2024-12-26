@@ -1,6 +1,8 @@
+import 'package:social_app_2/firebase_options_prod.dart';
+
 import 'main.dart';
 
 // * Entry point for the prod flavor
 void main() async {
-  await runMainApp();
+  await runMainApp(firebaseOptions: DefaultFirebaseOptions.currentPlatform);
 }

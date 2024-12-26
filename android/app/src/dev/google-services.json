@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "490911373311",
+    "project_id": "social-app-dev-2692e",
+    "storage_bucket": "social-app-dev-2692e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490911373311:android:772d5ac47b05f67f9439ca",
+        "android_client_info": {
+          "package_name": "com.derodian.social_app_2.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "490911373311-4du2f4rmmfemju0cnfo5ahhnbe334kc9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjDUXJOWoqNdpqZoaHdbpNmBK6pf4jYcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "490911373311-4du2f4rmmfemju0cnfo5ahhnbe334kc9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
