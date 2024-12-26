@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>23265461996-t0lgn3qg63mul7k0gq29a06gvkf292nd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.23265461996-t0lgn3qg63mul7k0gq29a06gvkf292nd</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>23265461996-uenft1bikv257r2dthvft982f2s55ngk.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAwcvt0UKbiHZuprWshQfczFPhjGtpmwVk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>23265461996</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.derodian.socialApp2</string>
+	<key>PROJECT_ID</key>
+	<string>social-app-3fbea</string>
+	<key>STORAGE_BUCKET</key>
+	<string>social-app-3fbea.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:23265461996:ios:5c754881805db6c66a47c9</string>
+</dict>
+</plist>

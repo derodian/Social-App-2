@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "23265461996",
+    "project_id": "social-app-3fbea",
+    "storage_bucket": "social-app-3fbea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23265461996:android:182dbd304619b69d6a47c9",
+        "android_client_info": {
+          "package_name": "com.derodian.social_app_1_0"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23265461996-uenft1bikv257r2dthvft982f2s55ngk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.derodian.social_app_1_0",
+            "certificate_hash": "9ef5a8c8929e918367379ec84803da7bb200156f"
+          }
+        },
+        {
+          "client_id": "23265461996-5i0jk4ffdb9qpr0t8csub18tcu303au4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALdsr3FbFCcb5EJXbVVjBQurP8F1j8Rpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23265461996-5i0jk4ffdb9qpr0t8csub18tcu303au4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "23265461996-7c7eqcsb5pt04sij0puk2m1hubh6v3r2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.derodian.socialApp10"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23265461996:android:ac7d061754ce76576a47c9",
+        "android_client_info": {
+          "package_name": "com.derodian.social_app_2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "23265461996-5i0jk4ffdb9qpr0t8csub18tcu303au4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALdsr3FbFCcb5EJXbVVjBQurP8F1j8Rpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "23265461996-5i0jk4ffdb9qpr0t8csub18tcu303au4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "23265461996-7c7eqcsb5pt04sij0puk2m1hubh6v3r2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.derodian.socialApp10"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
