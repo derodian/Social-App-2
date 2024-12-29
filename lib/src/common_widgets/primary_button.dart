@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_app_2/src/constants/app_colors.dart';
+import 'package:social_app_2/src/theme/app_colors.dart';
 
 /// Primary button based on [ElevatedButton]. Useful for CTAs in the app.
 class PrimaryButton extends StatelessWidget {

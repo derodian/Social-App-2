@@ -1,6 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:social_app_2/src/constants/app_colors.dart';
+import 'package:social_app_2/src/theme/app_colors.dart';
 import 'package:social_app_2/src/constants/app_sizes.dart';
 
 /// Custom theming for the app, based on FlexColorScheme.

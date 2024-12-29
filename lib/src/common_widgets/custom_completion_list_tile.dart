@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:social_app_2/src/common_widgets/custom_progress_checkmark.dart';
-import 'package:social_app_2/src/constants/app_colors.dart';
+import 'package:social_app_2/src/theme/app_colors.dart';
 import 'package:social_app_2/src/constants/app_sizes.dart';
 import 'package:social_app_2/src/utils/string_hardcoded.dart';
 

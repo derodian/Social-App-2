@@ -3,8 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:social_app_2/src/features/auth/presentation/email_not_verified_screen.dart';
-import 'package:social_app_2/src/features/auth/presentation/sign_in_screen.dart';
+import 'package:social_app_2/src/features/auth/data/auth_repository.dart';
+import 'package:social_app_2/src/features/auth/presentation/account/account_screen.dart';
+import 'package:social_app_2/src/features/auth/presentation/account/edit_account_screen.dart';
+import 'package:social_app_2/src/features/auth/presentation/email_not_verified/email_not_verified_screen.dart';
+import 'package:social_app_2/src/features/auth/presentation/sign_in/email_password_sign_in_contents.dart';
+import 'package:social_app_2/src/features/auth/presentation/sign_in/email_password_sign_in_form_type.dart';
+import 'package:social_app_2/src/features/auth/presentation/sign_in/sign_in_screen.dart';
+import 'package:social_app_2/src/features/committee_member/domain/committee_member.dart';
+import 'package:social_app_2/src/features/committee_member/presentation/add_edit_committee_member_screen.dart';
+import 'package:social_app_2/src/features/committee_member/presentation/detail_committee_member_screen.dart';
+import 'package:social_app_2/src/features/committee_member/typedefs/committee_member_id.dart';
+import 'package:social_app_2/src/features/events/presentation/events_list_screen.dart';
+import 'package:social_app_2/src/features/news/presentation/add_edit_news_screen.dart';
+import 'package:social_app_2/src/features/news/presentation/detail_news_screen.dart';
+import 'package:social_app_2/src/features/news/presentation/news_list_screen.dart';
+import 'package:social_app_2/src/features/news/typedefs/news_id.dart';
 import 'package:social_app_2/src/features/onboarding/data/onboarding_repository.dart';
 import 'package:social_app_2/src/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:social_app_2/src/routing/go_router_refresh_stream.dart';
@@ -49,7 +63,7 @@ enum AppRoute {
   editPhotoAlbum,
   addPictures,
   members,
-  committee,
+  committeeMembers,
   directory,
   culturalAwareness,
   jobs,
@@ -62,12 +76,18 @@ enum AppRoute {
   entries,
   profile,
   editAccount,
+  account,
+  admin,
+  appUsers,
+  singleCommitteeMember,
+  addCommitteeMember,
+  editCommitteeMember,
 }
 
 @riverpod
 // ignore: unsupported_provider_value
 GoRouter goRouter(Ref ref) {
-  // final authRepository = ref.watch(authRepositoryProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
   final onboardingRepository =
       ref.watch(onboardingRepositoryProvider).requireValue;
   return GoRouter(
@@ -85,28 +105,28 @@ GoRouter goRouter(Ref ref) {
         }
       }
       // final isLoggedIn = true;
-      // // final isLoggedIn = authRepository.currentUser != null;
-      // // final isEmailVerified = authRepository.isEmailVerified;
+      final isLoggedIn = authRepository.currentUser != null;
+      final isEmailVerified = authRepository.isEmailVerified;
 
-      // if (isLoggedIn == true) {
-      //   // if (!isEmailVerified) {
-      //   //   return '/emailNotVerified';
-      //   // } else if (state.matchedLocation.startsWith('/signIn')) {
-      //   //   return '/news';
-      //   // }
-      //   return '/news';
-      // } else {
-      //   if (path.startsWith('/news') ||
-      //       path.startsWith('/events') ||
-      //       path.startsWith('/insta') ||
-      //       path.startsWith('/photos') ||
-      //       path.startsWith('/account')) {
-      //     return '/signIn';
-      //   }
-      // }
+      if (isLoggedIn == true) {
+        if (!isEmailVerified) {
+          return '/emailNotVerified';
+        } else if (state.matchedLocation.startsWith('/signIn')) {
+          return '/news';
+        }
+        return '/news';
+      } else {
+        if (path.startsWith('/news') ||
+            path.startsWith('/events') ||
+            path.startsWith('/insta') ||
+            path.startsWith('/photos') ||
+            path.startsWith('/account')) {
+          return '/signIn';
+        }
+      }
       return null;
     },
-    // refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
+    refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
     routes: [
       GoRoute(
         path: '/onboarding',
@@ -121,19 +141,18 @@ GoRouter goRouter(Ref ref) {
         pageBuilder: (context, state) => const NoTransitionPage(
           child: SignInScreen(),
         ),
-        // routes: [
-        //   GoRoute(
-        //     path: 'emailPassword',
-        //     name: AppRoute.emailPassword.name,
-        //     pageBuilder: (context, state) => MaterialPage(
-        //       key: state.pageKey,
-        //       fullscreenDialog: true,
-        //       child: const EmailPasswordSignInScreen(
-        //         formType: EmailPasswordSignInFormType.signIn,
-        //       ),
-        //     ),
-        //   ),
-        // ],
+        routes: [
+          GoRoute(
+            path: 'emailPassword',
+            name: AppRoute.emailPassword.name,
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              fullscreenDialog: true,
+              child: EmailPasswordSignInContents(
+                  formType: EmailPasswordSignInFormType.signIn),
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: '/emailNotVerified',
@@ -144,263 +163,235 @@ GoRouter goRouter(Ref ref) {
       ),
       // Stateful navigation based on:
       // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
-      // StatefulShellRoute.indexedStack(
-      //   builder: (context, state, navigationShell) {
-      //     return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
-      //   },
-      //   branches: [
-      //     // StatefulShellBranch(
-      //     //   navigatorKey: _jobsNavigatorKey,
-      //     //   routes: [
-      //     //     GoRoute(
-      //     //       path: '/jobs',
-      //     //       name: AppRoute.jobs.name,
-      //     //       pageBuilder: (context, state) => const NoTransitionPage(
-      //     //         child: JobsScreen(),
-      //     //       ),
-      //     //       // routes: [
-      //     //       //   GoRoute(
-      //     //       //     path: 'add',
-      //     //       //     name: AppRoute.addJob.name,
-      //     //       //     parentNavigatorKey: _rootNavigatorKey,
-      //     //       //     pageBuilder: (context, state) {
-      //     //       //       return const MaterialPage(
-      //     //       //         fullscreenDialog: true,
-      //     //       //         child: EditJobScreen(),
-      //     //       //       );
-      //     //       //     },
-      //     //       //   ),
-      //     //       //   GoRoute(
-      //     //       //     path: ':id',
-      //     //       //     name: AppRoute.job.name,
-      //     //       //     pageBuilder: (context, state) {
-      //     //       //       final id = state.pathParameters['id']!;
-      //     //       //       return const MaterialPage(
-      //     //       //         child: JobEntriesScreen(jobId: id),
-      //     //       //       );
-      //     //       //     },
-      //     //       //     routes: [
-      //     //       //       GoRoute(
-      //     //       //         path: 'entries/add',
-      //     //       //         name: AppRoute.addEntry.name,
-      //     //       //         parentNavigatorKey: _rootNavigatorKey,
-      //     //       //         pageBuilder: (context, state) {
-      //     //       //           final jobId = state.pathParameters['id']!;
-      //     //       //           return MaterialPage(
-      //     //       //             fullscreenDialog: true,
-      //     //       //             child: EntryScreen(
-      //     //       //               jobId: jobId,
-      //     //       //             ),
-      //     //       //           );
-      //     //       //         },
-      //     //       //       ),
-      //     //       //       GoRoute(
-      //     //       //         path: 'entries/:eid',
-      //     //       //         name: AppRoute.entry.name,
-      //     //       //         pageBuilder: (context, state) {
-      //     //       //           final jobId = state.pathParameters['id']!;
-      //     //       //           final entryId = state.pathParameters['eid']!;
-      //     //       //           final entry = state.extra as Entry?;
-      //     //       //           return MaterialPage(
-      //     //       //             fullscreenDialog: true,
-      //     //       //             child: EntryScreen(
-      //     //       //               jobId: jobId,
-      //     //       //               entryId: entryId,
-      //     //       //               entry: entry,
-      //     //       //             ),
-      //     //       //           );
-      //     //       //         },
-      //     //       //       ),
-      //     //       //       GoRoute(
-      //     //       //         path: 'edit',
-      //     //       //         name: AppRoute.editJob.name,
-      //     //       //         pageBuilder: (context, state) {
-      //     //       //           final jobId = state.pathParameters['id'];
-      //     //       //           final job = state.extra as Job?;
-      //     //       //           return MaterialPage(
-      //     //       //             fullscreenDialog: true,
-      //     //       //             child: EditJobScreen(jobId: jobId, job: job),
-      //     //       //           );
-      //     //       //         },
-      //     //       //       ),
-      //     //       //     ],
-      //     //       //   ),
-      //     //       // ],
-      //     //     )
-      //     //   ],
-      //     // ),
-      //     StatefulShellBranch(
-      //       navigatorKey: _newsNavigatorKey,
-      //       routes: [
-      //         GoRoute(
-      //           path: '/news',
-      //           name: AppRoute.news.name,
-      //           pageBuilder: (context, state) => const NoTransitionPage(
-      //             child: NewsListScreen(),
-      //           ),
-      //           routes: [
-      //             GoRoute(
-      //               path: 'add',
-      //               name: AppRoute.addNews.name,
-      //               parentNavigatorKey: _rootNavigatorKey,
-      //               pageBuilder: (context, state) {
-      //                 return const MaterialPage(
-      //                   fullscreenDialog: true,
-      //                   child: EditNewsScreen(),
-      //                 );
-      //               },
-      //             ),
-      //             GoRoute(
-      //               path: ':id',
-      //               name: AppRoute.singleNews.name,
-      //               pageBuilder: (context, state) {
-      //                 final id = state.pathParameters['id'] as NewsID;
-      //                 return MaterialPage(
-      //                   child: DetailNewsScreen(newsId: id),
-      //                 );
-      //               },
-      //               routes: [
-      //                 GoRoute(
-      //                   path: 'edit',
-      //                   name: AppRoute.editNews.name,
-      //                   pageBuilder: (context, state) {
-      //                     final newsId = state.pathParameters['id'] as NewsID;
-      //                     return MaterialPage(
-      //                       child: EditNewsScreen(
-      //                         newsId: newsId,
-      //                       ),
-      //                     );
-      //                   },
-      //                 ),
-      //               ],
-      //             ),
-      //           ],
-      //         ),
-      //       ],
-      //     ),
-      //     StatefulShellBranch(
-      //       navigatorKey: _eventsNavigatorKey,
-      //       routes: [
-      //         GoRoute(
-      //           path: '/events',
-      //           name: AppRoute.events.name,
-      //           pageBuilder: (context, state) => const NoTransitionPage(
-      //             child: EventsScreen(),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //     StatefulShellBranch(
-      //       navigatorKey: _instaNavigatorKey,
-      //       routes: [
-      //         GoRoute(
-      //           path: '/insta',
-      //           name: AppRoute.instaPost.name,
-      //           pageBuilder: (context, state) => const NoTransitionPage(
-      //             child: InstaPostScreen(),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //     StatefulShellBranch(
-      //       navigatorKey: _photosNavigatorKey,
-      //       routes: [
-      //         GoRoute(
-      //           path: '/photos',
-      //           name: AppRoute.photos.name,
-      //           pageBuilder: (context, state) => const NoTransitionPage(
-      //             child: PhotosScreen(),
-      //           ),
-      //           routes: [
-      //             GoRoute(
-      //               path: 'add',
-      //               name: AppRoute.addPhotosAlbum.name,
-      //               parentNavigatorKey: _rootNavigatorKey,
-      //               pageBuilder: (context, state) {
-      //                 return const MaterialPage(
-      //                   fullscreenDialog: true,
-      //                   child: AddPhotosAlbumScreen(),
-      //                 );
-      //               },
-      //             ),
-      //             GoRoute(
-      //               path: ':albumId',
-      //               name: AppRoute.photoAlbum.name,
-      //               pageBuilder: (context, state) {
-      //                 final albumId =
-      //                     state.pathParameters['albumId'] as AlbumID;
-      //                 return MaterialPage(
-      //                   child: AlbumPhotosScreen(photoAlbumID: albumId),
-      //                 );
-      //               },
-      //               routes: [
-      //                 GoRoute(
-      //                   path: 'albumPhotos/:initialIndex',
-      //                   name: AppRoute.photoViewer.name,
-      //                   pageBuilder: (context, state) {
-      //                     final albumId =
-      //                         state.pathParameters['albumId'] as AlbumID;
-      //                     final initialIndex =
-      //                         int.parse(state.pathParameters['initialIndex']!);
-      //                     final List<Photo> initialPhotos =
-      //                         state.extra as List<Photo>;
-      //                     return MaterialPage(
-      //                       child: DetailPhotoScreen(
-      //                         initialPhotos: initialPhotos,
-      //                         initialIndex: initialIndex,
-      //                         albumId: albumId,
-      //                       ),
-      //                     );
-      //                   },
-      //                 ),
-      //                 GoRoute(
-      //                   path: 'edit',
-      //                   name: AppRoute.editPhotoAlbum.name,
-      //                   pageBuilder: (context, state) {
-      //                     final photoAlbumId =
-      //                         state.pathParameters['id'] as PhotoAlbumID;
-      //                     final photoAlbum = state.extra as PhotoAlbum?;
-      //                     return MaterialPage(
-      //                       child: EditPhotoAlbumScreen(
-      //                         photoAlbumID: photoAlbumId,
-      //                         photoAlbum: photoAlbum,
-      //                       ),
-      //                     );
-      //                   },
-      //                 ),
-      //               ],
-      //             ),
-      //           ],
-      //         ),
-      //       ],
-      //     ),
-      //     StatefulShellBranch(
-      //       navigatorKey: _accountNavigatorKey,
-      //       routes: [
-      //         GoRoute(
-      //           path: '/account',
-      //           name: AppRoute.profile.name,
-      //           pageBuilder: (context, state) => const NoTransitionPage(
-      //             child: AccountScreen(),
-      //           ),
-      //           routes: [
-      //             GoRoute(
-      //               path: 'edit/:userId',
-      //               name: AppRoute.editAccount.name,
-      //               pageBuilder: (context, state) {
-      //                 final userId = state.pathParameters['userId']!;
-      //                 return MaterialPage(
-      //                   fullscreenDialog: false,
-      //                   child: EditAccountScreen(userId: userId),
-      //                 );
-      //               },
-      //             ),
-      //           ],
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            navigatorKey: _newsNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/news',
+                name: AppRoute.news.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: NewsListScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'add',
+                    name: AppRoute.addNews.name,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    pageBuilder: (context, state) {
+                      return const MaterialPage(
+                        fullscreenDialog: true,
+                        child: AddEditNewsScreen(),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: ':id',
+                    name: AppRoute.singleNews.name,
+                    pageBuilder: (context, state) {
+                      final id = state.pathParameters['id'] as NewsID;
+                      return MaterialPage(
+                        child: DetailNewsScreen(newsId: id),
+                      );
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'edit',
+                        name: AppRoute.editNews.name,
+                        pageBuilder: (context, state) {
+                          final newsId = state.pathParameters['id'] as NewsID;
+                          return MaterialPage(
+                            child: AddEditNewsScreen(
+                              newsId: newsId,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _eventsNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/events',
+                name: AppRoute.events.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: EventsListScreen(),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _committeeNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/committee',
+                name: AppRoute.committeeMembers.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: EventsListScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'add',
+                    name: AppRoute.addCommitteeMember.name,
+                    parentNavigatorKey: _rootNavigatorKey,
+                    pageBuilder: (context, state) {
+                      return const MaterialPage(
+                        fullscreenDialog: true,
+                        child: AddEditCommitteeMemberScreen(),
+                      );
+                    },
+                  ),
+                  // GoRoute(
+                  //   path: ':id',
+                  //   name: AppRoute.singleCommitteeMember.name,
+                  //   pageBuilder: (context, state) {
+                  //     final id =
+                  //         state.pathParameters['id'] as CommitteeMemberID;
+                  //     return MaterialPage(
+                  //       child:
+                  //           DetailCommitteeMemberScreen(committeeMemberID: id),
+                  //     );
+                  //   },
+                  //   routes: [
+                  //     GoRoute(
+                  //       path: 'edit',
+                  //       name: AppRoute.editCommitteeMember.name,
+                  //       pageBuilder: (context, state) {
+                  //         final committeeMemberId =
+                  //             state.pathParameters['id'] as CommitteeMemberID;
+                  //         return MaterialPage(
+                  //           child: AddEditCommitteeMemberScreen(
+                  //             committeeMemberId: committeeMemberId,
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
+                ],
+              ),
+            ],
+          ),
+          // StatefulShellBranch(
+          //   navigatorKey: _instaNavigatorKey,
+          //   routes: [
+          //     GoRoute(
+          //       path: '/insta',
+          //       name: AppRoute.instaPost.name,
+          //       pageBuilder: (context, state) => const NoTransitionPage(
+          //         child: InstaPostScreen(),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // StatefulShellBranch(
+          //   navigatorKey: _photosNavigatorKey,
+          //   routes: [
+          //     GoRoute(
+          //       path: '/photos',
+          //       name: AppRoute.photos.name,
+          //       pageBuilder: (context, state) => const NoTransitionPage(
+          //         child: PhotosScreen(),
+          //       ),
+          //       routes: [
+          //         GoRoute(
+          //           path: 'add',
+          //           name: AppRoute.addPhotosAlbum.name,
+          //           parentNavigatorKey: _rootNavigatorKey,
+          //           pageBuilder: (context, state) {
+          //             return const MaterialPage(
+          //               fullscreenDialog: true,
+          //               child: AddPhotosAlbumScreen(),
+          //             );
+          //           },
+          //         ),
+          //         GoRoute(
+          //           path: ':albumId',
+          //           name: AppRoute.photoAlbum.name,
+          //           pageBuilder: (context, state) {
+          //             final albumId =
+          //                 state.pathParameters['albumId'] as AlbumID;
+          //             return MaterialPage(
+          //               child: AlbumPhotosScreen(photoAlbumID: albumId),
+          //             );
+          //           },
+          //           routes: [
+          //             GoRoute(
+          //               path: 'albumPhotos/:initialIndex',
+          //               name: AppRoute.photoViewer.name,
+          //               pageBuilder: (context, state) {
+          //                 final albumId =
+          //                     state.pathParameters['albumId'] as AlbumID;
+          //                 final initialIndex =
+          //                     int.parse(state.pathParameters['initialIndex']!);
+          //                 final List<Photo> initialPhotos =
+          //                     state.extra as List<Photo>;
+          //                 return MaterialPage(
+          //                   child: DetailPhotoScreen(
+          //                     initialPhotos: initialPhotos,
+          //                     initialIndex: initialIndex,
+          //                     albumId: albumId,
+          //                   ),
+          //                 );
+          //               },
+          //             ),
+          //             GoRoute(
+          //               path: 'edit',
+          //               name: AppRoute.editPhotoAlbum.name,
+          //               pageBuilder: (context, state) {
+          //                 final photoAlbumId =
+          //                     state.pathParameters['id'] as PhotoAlbumID;
+          //                 final photoAlbum = state.extra as PhotoAlbum?;
+          //                 return MaterialPage(
+          //                   child: EditPhotoAlbumScreen(
+          //                     photoAlbumID: photoAlbumId,
+          //                     photoAlbum: photoAlbum,
+          //                   ),
+          //                 );
+          //               },
+          //             ),
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //   ],
+          // ),
+          StatefulShellBranch(
+            navigatorKey: _accountNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/account',
+                name: AppRoute.profile.name,
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: AccountScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'edit/:userId',
+                    name: AppRoute.editAccount.name,
+                    pageBuilder: (context, state) {
+                      final userId = state.pathParameters['userId']!;
+                      return MaterialPage(
+                        fullscreenDialog: false,
+                        child: EditAccountScreen(userId: userId),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     ],
     errorBuilder: (context, state) => const NotFoundScreen(),
   );

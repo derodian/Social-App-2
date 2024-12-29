@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:social_app_2/global_firebase_options.dart';
 import 'package:social_app_2/src/app_bootstrap.dart';
 import 'package:social_app_2/src/app_bootstrap_firebase.dart';
 import 'package:social_app_2/src/features/onboarding/data/onboarding_repository.dart';
@@ -14,6 +15,8 @@ Future<void> runMainApp({required FirebaseOptions firebaseOptions}) async {
   WidgetsFlutterBinding.ensureInitialized();
   // * Initialize Firebase
   await Firebase.initializeApp(options: firebaseOptions);
+  // Optional: Store the firebaseOptions in a globally accessible location
+  GlobalFirebaseOptions.instance.options = firebaseOptions;
   // setup emulators : MAKE SURE TO COMMENT IT OUT DURING PRODUCTION
   // await setupEmulators();
   // turn off the # in the URLs on the web

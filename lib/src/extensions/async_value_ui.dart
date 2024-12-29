@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_app_2/src/common_widgets/alert_dialogs.dart';
 import 'package:social_app_2/src/exceptions/app_exception.dart';
+import 'package:social_app_2/src/exceptions/firebase_error_handler.dart';
 import 'package:social_app_2/src/utils/string_hardcoded.dart';
 
 /// A helper [AsyncValue] extension to show an alert dialog on error
@@ -25,7 +26,9 @@ extension AsyncValueUI on AsyncValue {
 
 String _errorMessage(Object? error) {
   if (error is FirebaseAuthException) {
-    return error.message ?? error.toString();
+    print(error);
+    final errorMessage = FirebaseErrorHandler.getAuthErrorMessage(error.code);
+    return errorMessage;
   } else if (error is AppException) {
     return error.message;
   } else if (error is PlatformException) {
