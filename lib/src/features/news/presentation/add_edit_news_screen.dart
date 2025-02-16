@@ -7,11 +7,12 @@ import 'package:social_app_2/src/common_widgets/alert_dialogs.dart';
 import 'package:social_app_2/src/common_widgets/custom_text_button.dart';
 import 'package:social_app_2/src/common_widgets/custom_text_form_field.dart';
 import 'package:social_app_2/src/common_widgets/responsive_center_scrollable.dart';
-import 'package:social_app_2/src/common_widgets/responsive_two_colum_layout.dart';
+import 'package:social_app_2/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:social_app_2/src/constants/app_sizes.dart';
 import 'package:social_app_2/src/constants/strings.dart';
 import 'package:social_app_2/src/extensions/async_value_ui.dart';
-import 'package:social_app_2/src/features/auth/data/auth_repository.dart';
+import 'package:social_app_2/src/features/auth/data/auth_service.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 import 'package:social_app_2/src/features/components/app_bar/home_app_bar.dart';
 import 'package:social_app_2/src/features/components/image/custom_cover_image.dart';
 import 'package:social_app_2/src/features/news/data/news_repository.dart';
@@ -70,7 +71,7 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
 
   Future<void> _loadExistingNewsData() async {
     final newsValue = await ref.read(newsFutureProvider(widget.newsId!).future);
-    final currentUser = ref.read(authRepositoryProvider).currentUser;
+    final currentUser = ref.read(authControllerProvider).value;
     if (newsValue != null) {
       setState(() {
         _titleController.text = newsValue.title;
@@ -159,7 +160,7 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text(Strings.newsDeleted)),
         );
-        ref.read(goRouterProvider).goNamed(AppRoute.news.name);
+        // ref.read(appRouterProvider).goNamed(AppRoute.news.name);
       }
     }
   }
@@ -177,7 +178,8 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
       appBar: HomeAppBar(
         title: widget.newsId != null ? Strings.editNews : Strings.addNews,
         showSaveButton: true,
-        onPressed: isLoading ? null : _submit,
+        onSave: isLoading ? null : _submit,
+        isSaving: isLoading,
       ),
       body: SingleChildScrollView(
         child: ResponsiveCenter(
@@ -215,7 +217,7 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
   }
 
   Future<void> _pickImage() async {
-    final imagePickerService = ref.read(imagePickerServiceProvider);
+    final imagePickerService = ref.read(imagePickerProvider);
     final file =
         await imagePickerService.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -232,22 +234,22 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
           CustomTextFormField(
             controller: _titleController,
             isEnabled: !isLoading,
-            labelText: 'Title'.hardcoded,
+            label: 'Title'.hardcoded,
             validator: ref.read(newsValidatorProvider).titleValidator,
           ),
           gapH8,
           CustomTextFormField(
             controller: _listTitleController,
             isEnabled: !isLoading,
-            labelText: 'List Title'.hardcoded,
+            label: 'List Title'.hardcoded,
             validator: ref.read(newsValidatorProvider).titleValidator,
           ),
           gapH8,
           CustomTextFormField(
             controller: _newsDetailsController,
             isEnabled: !isLoading,
-            labelText: 'Details'.hardcoded,
-            textInputType: TextInputType.multiline,
+            label: 'Details'.hardcoded,
+            keyboardType: TextInputType.multiline,
             textInputAction: TextInputAction.newline,
             maxLines: 5,
             minLines: 4,
@@ -257,19 +259,19 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
           CustomTextFormField(
             controller: _locationController,
             isEnabled: !isLoading,
-            labelText: Strings.location,
+            label: Strings.location,
           ),
           gapH8,
           CustomTextFormField(
             controller: _addressController,
             isEnabled: !isLoading,
-            labelText: Strings.address,
+            label: Strings.address,
           ),
           gapH8,
           CustomTextFormField(
             controller: _cityController,
             isEnabled: !isLoading,
-            labelText: Strings.city,
+            label: Strings.city,
           ),
           gapH8,
           Row(
@@ -278,7 +280,7 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
                 child: CustomTextFormField(
                   controller: _stateController,
                   isEnabled: !isLoading,
-                  labelText: Strings.state,
+                  label: Strings.state,
                 ),
               ),
               gapW8,
@@ -286,7 +288,7 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
                 child: CustomTextFormField(
                   controller: _zipController,
                   isEnabled: !isLoading,
-                  labelText: Strings.zip,
+                  label: Strings.zip,
                 ),
               ),
             ],

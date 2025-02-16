@@ -61,7 +61,7 @@ class AppStartupWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 1. eagerly initialize appStartupProvider (and all the providers it depends on)
+    // 1. initialize appStartupProvider (and all the providers it depends on)
     final appStartupState = ref.watch(appStartupNotifierProvider);
     return appStartupState.when(
       // 2. loading state

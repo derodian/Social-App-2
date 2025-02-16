@@ -47,12 +47,15 @@ class DetailEventScreen extends ConsumerWidget {
             child: _buildAppBarIcon(
               context: context,
               icon: Icons.edit,
-              onPressed: () => context.goNamed(
-                AppRoute.editEvent.name,
-                pathParameters: {
-                  'id': eventId,
-                },
-              ),
+              onPressed: () {
+                // TODO uncomment onPressed
+              },
+              // onPressed: () => context.goNamed(
+              //   AppRoute.editEvent.name,
+              //   pathParameters: {
+              //     'id': eventId,
+              //   },
+              // ),
             ),
           ),
         ],
@@ -216,8 +219,8 @@ class EventDetails extends ConsumerWidget {
                 ),
                 gapH8,
                 if (address.isNotEmpty)
-                  ShowAddress(
-                    location: location,
+                  Address(
+                    locationName: location,
                     address: '$address \n$city $state $zip',
                   ),
                 gapH24,

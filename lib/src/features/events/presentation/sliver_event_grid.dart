@@ -57,14 +57,14 @@ class _SliverEventGridState extends ConsumerState<SliverEventGrid> {
     return AsyncValueWidget<List<Event>>(
       value: ref.watch(eventsListNotifierProvider),
       data: (events) => _buildEventGrid(events),
-      loading: () => const SliverToBoxAdapter(
-          child: Center(child: CircularProgressIndicator())),
-      error: (error, stackTrace) => SliverToBoxAdapter(
-        child: ErrorDisplay(
-          message: 'Error loading events: $error',
-          onRetry: () => ref.refresh(eventsListNotifierProvider),
-        ),
-      ),
+      // loading: () => const SliverToBoxAdapter(
+      //     child: Center(child: CircularProgressIndicator())),
+      // error: (error, stackTrace) => SliverToBoxAdapter(
+      //   child: ErrorDisplay(
+      //     message: 'Error loading events: $error',
+      //     onRetry: () => ref.refresh(eventsListNotifierProvider),
+      //   ),
+      // ),
     );
   }
 

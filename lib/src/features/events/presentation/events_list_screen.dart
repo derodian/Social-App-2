@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:social_app_2/src/constants/strings.dart';
-import 'package:social_app_2/src/features/auth/data/auth_repository.dart';
+import 'package:social_app_2/src/features/auth/data/auth_service.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
+import 'package:social_app_2/src/features/components/admin_only/admin_only_widget.dart';
 import 'package:social_app_2/src/features/components/app_bar/home_app_bar.dart';
 import 'package:social_app_2/src/features/components/drawer/app_drawer_view.dart';
 import 'package:social_app_2/src/features/events/presentation/sliver_event_grid.dart';
@@ -45,15 +47,19 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(authStateChangesProvider).value;
-
     return Scaffold(
       appBar: HomeAppBar(
         title: Strings.events,
-        showAddButton: true,
-        onPressed: () => context.goNamed(AppRoute.addEvent.name),
+        actions: [
+          AdminOnlyWidget(
+            child: IconButton(
+              // onPressed: () => context.goNamed(AppRoute.addEvent.name),
+              icon: Icon(Icons.add), onPressed: () {},
+            ),
+          ),
+        ],
       ),
-      drawer: currentUser != null ? const AppDrawerView() : null,
+      // drawer: currentUser != null ? const AppDrawerView() : null,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -63,11 +69,11 @@ class _EventsListScreenState extends ConsumerState<EventsListScreen> {
           //   child: EventSearchTextField(),
           // ),
           SliverEventGrid(
-            onPressed: (context, eventId) => context.goNamed(
-              AppRoute.singleEvent.name,
-              pathParameters: {'id': eventId},
-            ),
-          ),
+              // onPressed: (context, eventId) => context.goNamed(
+              //   AppRoute.singleEvent.name,
+              //   pathParameters: {'id': eventId},
+              // ),
+              ),
         ],
       ),
     );

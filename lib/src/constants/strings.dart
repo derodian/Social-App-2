@@ -25,6 +25,7 @@ class Strings {
   static const String deleteAccount = 'Delete Account';
   static const String reauthenticateAccount =
       "Please Re-enter your credentials";
+  static const String defaultEmail = "email@socialapp.com";
 
   // Google
   static const String google = 'Google';
@@ -62,6 +63,12 @@ class Strings {
       'Your email has not yet been verified, please check your inbox or spam and verify your account. You can click on button bellow to re-send verification link.';
   static const String sendEmailVerification = 'Send verification email';
   static const String isVerifiedSignIn = 'Already Verified?';
+  static const String ifVerifiedSignOutSignIn =
+      "If you have already verified your email, please sign out and sign in again";
+  static const String waitingForApproval = 'Waiting for Approval';
+  static const String accountApproved = 'Your account has been approved!';
+  static const String awaitingApproval =
+      'Your account is currently awaiting approval from an administrator.';
 
   // Home page
   static const String homePage = 'Home Page';
@@ -255,8 +262,6 @@ class Strings {
       "We've sent you an email verification. Please open it to verify your account. If you haven't received a verification email yet, press the button below!";
   static const String verifyEmailSendEmailVerification =
       "Send email verification";
-  static const String ifVerifiedSignOutSignIn =
-      "If you have already verified your email, please sign out and sign in again";
 
   static const String logIntoYourAccount =
       'Log into your account using one of the options below.';

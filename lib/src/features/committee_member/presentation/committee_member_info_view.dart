@@ -88,7 +88,7 @@ class CommitteeMemberDetailView extends ConsumerWidget {
               gapH12,
               const DividerWithMargins(),
               email.trim().length > 1
-                  ? EmailAddress(emailAddress: email)
+                  ? EmailAddress(email: email)
                   : Container(),
               gapH16,
               phone.trim().length > 1
@@ -96,7 +96,7 @@ class CommitteeMemberDetailView extends ConsumerWidget {
                   : Container(),
               // gapH8,
               address.trim().length > 1
-                  ? ShowAddress(address: address)
+                  ? Address(address: address)
                   : Container(),
               gapH12,
               Align(

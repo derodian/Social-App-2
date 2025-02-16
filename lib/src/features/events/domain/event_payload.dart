@@ -1,7 +1,7 @@
 import 'dart:collection' show MapView;
 
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:social_app_2/src/constants/firebase_field_name.dart';
+import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/events/domain/event.dart';
 import 'package:social_app_2/src/features/events/typedefs/event_id.dart';
 
@@ -28,26 +28,26 @@ class EventPayload extends MapView<String, dynamic> {
     String? zip,
     int views = 0,
   }) : super({
-          FirebaseFieldName.eventId: id,
-          FirebaseFieldName.eventListTitle: listTitle,
-          FirebaseFieldName.eventPostedBy: postedBy,
-          FirebaseFieldName.eventPostDate: postDate.millisecondsSinceEpoch,
-          FirebaseFieldName.eventLastUpdated:
+          FirestoreFieldName.eventId: id,
+          FirestoreFieldName.eventListTitle: listTitle,
+          FirestoreFieldName.eventPostedBy: postedBy,
+          FirestoreFieldName.eventPostDate: postDate.millisecondsSinceEpoch,
+          FirestoreFieldName.eventLastUpdateAt:
               lastUpdated.millisecondsSinceEpoch,
-          FirebaseFieldName.eventType: type,
-          FirebaseFieldName.eventTitle: title,
-          FirebaseFieldName.eventStatus: status,
-          FirebaseFieldName.eventDetails: eventDetails,
-          FirebaseFieldName.eventImageUrl: imageUrl,
-          FirebaseFieldName.eventImageFileName: imageFileName,
-          FirebaseFieldName.eventStartDate: startDate.millisecondsSinceEpoch,
-          FirebaseFieldName.eventEndDate: endDate.millisecondsSinceEpoch,
-          FirebaseFieldName.eventLocation: location,
-          FirebaseFieldName.eventAddress: address,
-          FirebaseFieldName.eventCity: city,
-          FirebaseFieldName.eventState: state,
-          FirebaseFieldName.eventZip: zip,
-          FirebaseFieldName.eventViews: views,
+          FirestoreFieldName.eventType: type,
+          FirestoreFieldName.eventTitle: title,
+          FirestoreFieldName.eventStatus: status,
+          FirestoreFieldName.eventDetails: eventDetails,
+          FirestoreFieldName.eventImageUrl: imageUrl,
+          FirestoreFieldName.eventImageFileName: imageFileName,
+          FirestoreFieldName.eventStartDate: startDate.millisecondsSinceEpoch,
+          FirestoreFieldName.eventEndDate: endDate.millisecondsSinceEpoch,
+          FirestoreFieldName.eventLocation: location,
+          FirestoreFieldName.eventAddress: address,
+          FirestoreFieldName.eventCity: city,
+          FirestoreFieldName.eventState: state,
+          FirestoreFieldName.eventZip: zip,
+          FirestoreFieldName.eventViews: views,
         });
 
   EventPayload.fromEvent(Event event)
@@ -75,29 +75,29 @@ class EventPayload extends MapView<String, dynamic> {
 
   factory EventPayload.fromMap(Map<String, dynamic> map) {
     return EventPayload(
-      id: map[FirebaseFieldName.eventId] as String,
-      listTitle: map[FirebaseFieldName.eventListTitle] as String,
-      postedBy: map[FirebaseFieldName.eventPostedBy] as String,
+      id: map[FirestoreFieldName.eventId] as String,
+      listTitle: map[FirestoreFieldName.eventListTitle] as String,
+      postedBy: map[FirestoreFieldName.eventPostedBy] as String,
       postDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.eventPostDate] as int),
+          map[FirestoreFieldName.eventPostDate] as int),
       lastUpdated: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.eventLastUpdated] as int),
-      title: map[FirebaseFieldName.eventTitle] as String,
-      type: map[FirebaseFieldName.eventType] as String?,
-      status: map[FirebaseFieldName.eventStatus] as String,
-      eventDetails: map[FirebaseFieldName.eventDetails] as String,
-      imageUrl: map[FirebaseFieldName.eventImageUrl] as String?,
-      imageFileName: map[FirebaseFieldName.eventImageFileName] as String?,
+          map[FirestoreFieldName.eventLastUpdateAt] as int),
+      title: map[FirestoreFieldName.eventTitle] as String,
+      type: map[FirestoreFieldName.eventType] as String?,
+      status: map[FirestoreFieldName.eventStatus] as String,
+      eventDetails: map[FirestoreFieldName.eventDetails] as String,
+      imageUrl: map[FirestoreFieldName.eventImageUrl] as String?,
+      imageFileName: map[FirestoreFieldName.eventImageFileName] as String?,
       startDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.eventStartDate] as int),
+          map[FirestoreFieldName.eventStartDate] as int),
       endDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.eventEndDate] as int),
-      location: map[FirebaseFieldName.eventLocation] as String?,
-      address: map[FirebaseFieldName.eventAddress] as String?,
-      city: map[FirebaseFieldName.eventCity] as String?,
-      state: map[FirebaseFieldName.eventState] as String?,
-      zip: map[FirebaseFieldName.eventZip] as String?,
-      views: (map[FirebaseFieldName.eventViews] as int?) ?? 0,
+          map[FirestoreFieldName.eventEndDate] as int),
+      location: map[FirestoreFieldName.eventLocation] as String?,
+      address: map[FirestoreFieldName.eventAddress] as String?,
+      city: map[FirestoreFieldName.eventCity] as String?,
+      state: map[FirestoreFieldName.eventState] as String?,
+      zip: map[FirestoreFieldName.eventZip] as String?,
+      views: (map[FirestoreFieldName.eventViews] as int?) ?? 0,
     );
   }
 

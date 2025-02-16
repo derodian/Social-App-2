@@ -9,11 +9,11 @@ import 'package:social_app_2/src/common_widgets/custom_dropdown_widget.dart';
 import 'package:social_app_2/src/common_widgets/custom_text_button.dart';
 import 'package:social_app_2/src/common_widgets/custom_text_form_field.dart';
 import 'package:social_app_2/src/common_widgets/responsive_center.dart';
-import 'package:social_app_2/src/common_widgets/responsive_two_colum_layout.dart';
+import 'package:social_app_2/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:social_app_2/src/constants/app_sizes.dart';
 import 'package:social_app_2/src/constants/strings.dart';
 import 'package:social_app_2/src/extensions/async_value_ui.dart';
-import 'package:social_app_2/src/features/auth/data/auth_repository.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 import 'package:social_app_2/src/features/components/app_bar/home_app_bar.dart';
 import 'package:social_app_2/src/features/components/image/custom_cover_image.dart';
 import 'package:social_app_2/src/features/events/data/event_repository.dart';
@@ -105,7 +105,7 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
   Future<void> _loadExistingEventData() async {
     final eventValue =
         await ref.read(eventFutureProvider(widget.eventId!).future);
-    final currentUser = ref.read(authRepositoryProvider).currentUser;
+    final currentUser = ref.read(authControllerProvider).value;
     if (eventValue != null) {
       setState(() {
         _titleController.text = eventValue.title;
@@ -147,7 +147,7 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
   }
 
   Future<void> _submit() async {
-    final currentUser = ref.read(authRepositoryProvider).currentUser;
+    final currentUser = ref.read(authControllerProvider).value;
     if (_formKey.currentState!.validate()) {
       final event = Event(
         id: widget.eventId ?? DateTime.now().toIso8601String(),
@@ -218,7 +218,7 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text(Strings.eventDeleted)),
         );
-        ref.read(goRouterProvider).goNamed(AppRoute.events.name);
+        // ref.read(appRouterProvider).goNamed(AppRoute.events.name);
       }
     }
   }
@@ -236,7 +236,8 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
       appBar: HomeAppBar(
         title: widget.eventId != null ? Strings.editEvent : Strings.addEvent,
         showSaveButton: true,
-        onPressed: isLoading ? null : _submit,
+        onSave: isLoading ? null : _submit,
+        isSaving: isLoading,
       ),
       body: SingleChildScrollView(
         child: ResponsiveCenter(
@@ -274,7 +275,7 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
   }
 
   Future<void> _pickImage() async {
-    final imagePickerService = ref.read(imagePickerServiceProvider);
+    final imagePickerService = ref.read(imagePickerProvider);
     final file =
         await imagePickerService.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -291,14 +292,14 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
           CustomTextFormField(
             controller: _titleController,
             isEnabled: !isLoading,
-            labelText: 'Title'.hardcoded,
+            label: 'Title'.hardcoded,
             validator: ref.read(eventValidatorProvider).titleValidator,
           ),
           gapH8,
           CustomTextFormField(
             controller: _listTitleController,
             isEnabled: !isLoading,
-            labelText: 'List Title'.hardcoded,
+            label: 'List Title'.hardcoded,
             validator: ref.read(eventValidatorProvider).titleValidator,
           ),
           gapH8,
@@ -321,8 +322,8 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
           CustomTextFormField(
             controller: _eventDetailsController,
             isEnabled: !isLoading,
-            labelText: 'Details'.hardcoded,
-            textInputType: TextInputType.multiline,
+            label: 'Details'.hardcoded,
+            keyboardType: TextInputType.multiline,
             textInputAction: TextInputAction.newline,
             maxLines: 5,
             minLines: 4,
@@ -350,19 +351,19 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
           CustomTextFormField(
             controller: _locationController,
             isEnabled: !isLoading,
-            labelText: Strings.location,
+            label: Strings.location,
           ),
           gapH8,
           CustomTextFormField(
             controller: _addressController,
             isEnabled: !isLoading,
-            labelText: Strings.address,
+            label: Strings.address,
           ),
           gapH8,
           CustomTextFormField(
             controller: _cityController,
             isEnabled: !isLoading,
-            labelText: Strings.city,
+            label: Strings.city,
           ),
           gapH8,
           Row(
@@ -371,7 +372,7 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
                 child: CustomTextFormField(
                   controller: _stateController,
                   isEnabled: !isLoading,
-                  labelText: Strings.state,
+                  label: Strings.state,
                 ),
               ),
               gapW8,
@@ -379,7 +380,7 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
                 child: CustomTextFormField(
                   controller: _zipController,
                   isEnabled: !isLoading,
-                  labelText: Strings.zip,
+                  label: Strings.zip,
                 ),
               ),
             ],

@@ -37,7 +37,7 @@ class AddEditEventScreenController extends _$AddEditEventScreenController
       if (mounted) {
         state = value;
         if (success) {
-          ref.read(goRouterProvider).pop();
+          ref.read(appRouterProvider).pop();
         }
       }
       return success;
@@ -56,7 +56,7 @@ class AddEditEventScreenController extends _$AddEditEventScreenController
     if (mounted) {
       state = value;
       if (!value.hasError) {
-        ref.read(goRouterProvider).pop();
+        ref.read(appRouterProvider).pop();
       }
     }
   }

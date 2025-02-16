@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 
 /// This class was imported from the migration guide for GoRouter 5.0
@@ -18,3 +17,12 @@ class GoRouterRefreshStream extends ChangeNotifier {
     super.dispose();
   }
 }
+
+// @riverpod
+// Stream<dynamic> authStateStream(Ref ref) {
+//   final authRepository = ref.watch(authRepositoryProvider);
+//   return Rx.merge([
+//     authRepository.authStateChanges(),
+//     authRepository.isUserEmailVerified(),
+//   ]);
+// }

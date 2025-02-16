@@ -55,14 +55,14 @@ class _SliverNewsGridState extends ConsumerState<SliverNewsGrid> {
     return AsyncValueWidget<List<News>>(
       value: ref.watch(newsListNotifierProvider),
       data: (newsList) => _buildNewsGrid(newsList),
-      loading: () => const SliverToBoxAdapter(
-          child: Center(child: CircularProgressIndicator())),
-      error: (error, stackTrace) => SliverToBoxAdapter(
-        child: ErrorDisplay(
-          message: 'Error loading news: $error',
-          onRetry: () => ref.refresh(newsListNotifierProvider),
-        ),
-      ),
+      // loading: () => const SliverToBoxAdapter(
+      //     child: Center(child: CircularProgressIndicator())),
+      // error: (error, stackTrace) => SliverToBoxAdapter(
+      //   child: ErrorDisplay(
+      //     message: 'Error loading news: $error',
+      //     onRetry: () => ref.refresh(newsListNotifierProvider),
+      //   ),
+      // ),
     );
   }
 

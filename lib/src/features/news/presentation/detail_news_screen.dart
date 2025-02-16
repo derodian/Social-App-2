@@ -8,7 +8,7 @@ import 'package:social_app_2/src/common_widgets/custom_image.dart';
 import 'package:social_app_2/src/common_widgets/divider_with_margins.dart';
 import 'package:social_app_2/src/common_widgets/empty_placeholder_widget.dart';
 import 'package:social_app_2/src/common_widgets/responsive_center.dart';
-import 'package:social_app_2/src/common_widgets/responsive_two_colum_layout.dart';
+import 'package:social_app_2/src/common_widgets/responsive_two_column_layout.dart';
 import 'package:social_app_2/src/common_widgets/url_launcher_widgets.dart';
 import 'package:social_app_2/src/constants/app_sizes.dart';
 import 'package:social_app_2/src/constants/strings.dart';
@@ -43,12 +43,15 @@ class DetailNewsScreen extends ConsumerWidget {
           AdminOnlyWidget(
             child: _buildAppBarIcon(
               icon: Icons.edit,
-              onPressed: () => context.goNamed(
-                AppRoute.editNews.name,
-                pathParameters: {
-                  'id': newsId,
-                },
-              ),
+              onPressed: () {
+                // TODO uncomment onPressed
+              },
+              // onPressed: () => context.goNamed(
+              //   AppRoute.editNews.name,
+              //   pathParameters: {
+              //     'id': newsId,
+              //   },
+              // ),
             ),
           ),
         ],
@@ -151,8 +154,10 @@ class NewsDetails extends ConsumerWidget {
             ContentText(text: details),
             gapH8,
             address.isNotEmpty
-                ? ShowAddress(
-                    location: location, address: '$address \n$city $state $zip')
+                ? Address(
+                    locationName: location,
+                    address: '$address \n$city $state $zip',
+                  )
                 : Container(),
             gapH8,
             Text(

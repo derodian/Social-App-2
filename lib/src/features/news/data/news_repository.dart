@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:social_app_2/src/constants/firebase_collection_name.dart';
-import 'package:social_app_2/src/constants/firebase_field_name.dart';
+import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/news/domain/news.dart';
 import 'package:social_app_2/src/features/news/domain/news_payload.dart';
 import 'package:social_app_2/src/features/news/typedefs/news_id.dart';
@@ -150,9 +150,9 @@ class NewsRepository {
         final newsRef = _firestore.doc(singleNewsPath(id));
         final snapshot = await transaction.get(newsRef);
         final currentViews =
-            (snapshot.data()?[FirebaseFieldName.newsViews] as int?) ?? 0;
+            (snapshot.data()?[FirestoreFieldName.newsViews] as int?) ?? 0;
         transaction
-            .update(newsRef, {FirebaseFieldName.newsViews: currentViews + 1});
+            .update(newsRef, {FirestoreFieldName.newsViews: currentViews + 1});
       });
     } catch (e) {
       _log.e('Error incrementing views for news $id: $e');
@@ -196,7 +196,7 @@ class NewsRepository {
         fromFirestore: (doc, _) => News.fromMap(doc.data()!),
         toFirestore: (News news, options) => news.toMap(),
       )
-      .orderBy(FirebaseFieldName.newsPostDate, descending: true);
+      .orderBy(FirestoreFieldName.newsPostDate, descending: true);
 
   // * Temporary search implementation
   // * Note: this is quite inefficient as it pulls the

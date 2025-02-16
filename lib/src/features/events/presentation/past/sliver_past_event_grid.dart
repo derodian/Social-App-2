@@ -11,7 +11,6 @@ import 'package:social_app_2/src/features/components/animations/empty_contents_w
 import 'package:social_app_2/src/features/events/data/event_repository.dart';
 import 'package:social_app_2/src/features/events/domain/event.dart';
 import 'package:social_app_2/src/features/events/presentation/event_card.dart';
-import 'package:social_app_2/src/features/events/presentation/events_list_notifier.dart';
 import 'package:social_app_2/src/features/events/presentation/past/past_events_list_notifier.dart';
 import 'package:social_app_2/src/features/events/typedefs/event_id.dart';
 
@@ -58,14 +57,14 @@ class _SliverPastEventGridState extends ConsumerState<SliverPastEventGrid> {
     return AsyncValueWidget<List<Event>>(
       value: ref.watch(pastEventsListStreamProvider),
       data: (events) => _buildEventGrid(events),
-      loading: () => const SliverToBoxAdapter(
-          child: Center(child: CircularProgressIndicator())),
-      error: (error, stackTrace) => SliverToBoxAdapter(
-        child: ErrorDisplay(
-          message: 'Error loading events: $error',
-          onRetry: () => ref.refresh(eventsListNotifierProvider),
-        ),
-      ),
+      // loading: () => const SliverToBoxAdapter(
+      //     child: Center(child: CircularProgressIndicator())),
+      // error: (error, stackTrace) => SliverToBoxAdapter(
+      //   child: ErrorDisplay(
+      //     message: 'Error loading events: $error',
+      //     onRetry: () => ref.refresh(eventsListNotifierProvider),
+      //   ),
+      // ),
     );
   }
 

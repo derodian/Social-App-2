@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Keys {
   static const String emailPassword = 'email-password';
   static const String google = 'google';
@@ -15,3 +17,5 @@ class Keys {
   static const String alertDefault = 'alertDefault';
   static const String alertCancel = 'alertCancel';
 }
+
+final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();

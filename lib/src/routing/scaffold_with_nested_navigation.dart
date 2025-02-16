@@ -81,11 +81,6 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
             selectedIcon: const Icon(Icons.picture_in_picture_alt),
             label: 'Photos'.hardcoded,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
-            label: 'Account'.hardcoded,
-          ),
         ],
         onDestinationSelected: onDestinationSelected,
       ),
@@ -123,11 +118,6 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                 icon: const Icon(Icons.view_headline_outlined),
                 selectedIcon: const Icon(Icons.view_headline),
                 label: Text('Events'.hardcoded),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(Icons.person_outline),
-                selectedIcon: const Icon(Icons.person),
-                label: Text('Account'.hardcoded),
               ),
             ],
           ),

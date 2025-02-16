@@ -9,13 +9,13 @@ import 'package:social_app_2/src/features/onboarding/presentation/onboarding_con
 import 'package:social_app_2/src/routing/app_router.dart';
 import 'package:social_app_2/src/utils/string_hardcoded.dart';
 
-class OnBoardingScreen extends ConsumerWidget {
-  const OnBoardingScreen({super.key});
+class OnboardingScreen extends ConsumerWidget {
+  const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final scale = MediaQuery.of(context).textScaler.scale(1.0);
-    final state = ref.watch(onboardingControllerProvider);
+
     return Scaffold(
       body: ResponsiveCenter(
         maxContentWidth: 450,
@@ -53,18 +53,20 @@ class OnBoardingScreen extends ConsumerWidget {
             gapH48,
             PrimaryButton(
               text: 'Get Started'.hardcoded,
-              isLoading: state.isLoading,
-              onPressed: state.isLoading
-                  ? null
-                  : () async {
-                      await ref
-                          .read(onboardingControllerProvider.notifier)
-                          .completeOnboarding();
-                      if (context.mounted) {
-                        // go to sign in page after completing onboarding
-                        context.goNamed(AppRoute.signIn.name);
-                      }
-                    },
+              onPressed: () async {
+                // await ref
+                //     .read(onboardingControllerProvider.notifier)
+                //     .completeOnboarding();
+                // Complete onboarding and save state
+                await ref
+                    .read(onboardingControllerProvider.notifier)
+                    .completeOnboarding();
+
+                // Navigate to auth
+                if (context.mounted) {
+                  ref.read(routerControllerProvider.notifier).goToAuth();
+                }
+              },
             )
           ],
         ),

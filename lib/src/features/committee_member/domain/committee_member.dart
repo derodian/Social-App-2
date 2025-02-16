@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-import 'package:social_app_2/src/constants/firebase_field_name.dart';
+import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/committee_member/typedefs/committee_member_id.dart';
 
 class CommitteeMember extends Equatable {
@@ -44,55 +44,55 @@ class CommitteeMember extends Equatable {
 
   factory CommitteeMember.fromMap(Map<String, dynamic> map) {
     return CommitteeMember(
-      committeeMemberId: map[FirebaseFieldName.committeeMemberId],
-      userId: map[FirebaseFieldName.committeeMemberUserId],
-      title: map[FirebaseFieldName.committeeMemberTitle],
-      name: map[FirebaseFieldName.committeeMemberName],
-      email: map[FirebaseFieldName.committeeMemberEmail],
-      phoneNumber: map[FirebaseFieldName.committeeMemberPhoneNumber],
-      titleId: map[FirebaseFieldName.committeeMemberTitleId],
-      photoUrl: map[FirebaseFieldName.committeeMemberPhotoUrl],
+      committeeMemberId: map[FirestoreFieldName.committeeMemberId],
+      userId: map[FirestoreFieldName.committeeMemberUserId],
+      title: map[FirestoreFieldName.committeeMemberTitle],
+      name: map[FirestoreFieldName.committeeMemberName],
+      email: map[FirestoreFieldName.committeeMemberEmail],
+      phoneNumber: map[FirestoreFieldName.committeeMemberPhoneNumber],
+      titleId: map[FirestoreFieldName.committeeMemberTitleId],
+      photoUrl: map[FirestoreFieldName.committeeMemberPhotoUrl],
       memberSince: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.committeeMemberSince]),
-      postDate: map[FirebaseFieldName.committeeMemberPostDate] != null
+          map[FirestoreFieldName.committeeMemberSince]),
+      postDate: map[FirestoreFieldName.committeeMemberPostDate] != null
           ? DateTime.fromMillisecondsSinceEpoch(
-              map[FirebaseFieldName.committeeMemberPostDate])
+              map[FirestoreFieldName.committeeMemberPostDate])
           : null,
-      updateDate: map[FirebaseFieldName.committeeMemberUpdateDate] != null
+      updateDate: map[FirestoreFieldName.committeeMemberUpdateDate] != null
           ? DateTime.fromMillisecondsSinceEpoch(
-              map[FirebaseFieldName.committeeMemberUpdateDate])
+              map[FirestoreFieldName.committeeMemberUpdateDate])
           : null,
-      postedBy: map[FirebaseFieldName.committeeMemberPostedBy],
-      photoFileName: map[FirebaseFieldName.committeeMemberPhotoFileName],
-      street: map[FirebaseFieldName.committeeMemberStreet],
-      city: map[FirebaseFieldName.committeeMemberCity],
-      state: map[FirebaseFieldName.committeeMemberState],
-      zip: map[FirebaseFieldName.committeeMemberZip],
+      postedBy: map[FirestoreFieldName.committeeMemberPostedBy],
+      photoFileName: map[FirestoreFieldName.committeeMemberPhotoFileName],
+      street: map[FirestoreFieldName.committeeMemberStreet],
+      city: map[FirestoreFieldName.committeeMemberCity],
+      state: map[FirestoreFieldName.committeeMemberState],
+      zip: map[FirestoreFieldName.committeeMemberZip],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      FirebaseFieldName.committeeMemberId: committeeMemberId,
-      FirebaseFieldName.committeeMemberUserId: userId,
-      FirebaseFieldName.committeeMemberTitle: title,
-      FirebaseFieldName.committeeMemberName: name,
-      FirebaseFieldName.committeeMemberEmail: email,
-      FirebaseFieldName.committeeMemberPhoneNumber: phoneNumber,
-      FirebaseFieldName.committeeMemberTitleId: titleId,
-      FirebaseFieldName.committeeMemberPhotoUrl: photoUrl,
-      FirebaseFieldName.committeeMemberSince:
+      FirestoreFieldName.committeeMemberId: committeeMemberId,
+      FirestoreFieldName.committeeMemberUserId: userId,
+      FirestoreFieldName.committeeMemberTitle: title,
+      FirestoreFieldName.committeeMemberName: name,
+      FirestoreFieldName.committeeMemberEmail: email,
+      FirestoreFieldName.committeeMemberPhoneNumber: phoneNumber,
+      FirestoreFieldName.committeeMemberTitleId: titleId,
+      FirestoreFieldName.committeeMemberPhotoUrl: photoUrl,
+      FirestoreFieldName.committeeMemberSince:
           memberSince.millisecondsSinceEpoch,
-      FirebaseFieldName.committeeMemberPostDate:
+      FirestoreFieldName.committeeMemberPostDate:
           postDate?.millisecondsSinceEpoch,
-      FirebaseFieldName.committeeMemberUpdateDate:
+      FirestoreFieldName.committeeMemberUpdateDate:
           updateDate?.millisecondsSinceEpoch,
-      FirebaseFieldName.committeeMemberPostedBy: postedBy,
-      FirebaseFieldName.committeeMemberPhotoFileName: photoFileName,
-      FirebaseFieldName.committeeMemberStreet: street,
-      FirebaseFieldName.committeeMemberCity: city,
-      FirebaseFieldName.committeeMemberState: state,
-      FirebaseFieldName.committeeMemberZip: zip,
+      FirestoreFieldName.committeeMemberPostedBy: postedBy,
+      FirestoreFieldName.committeeMemberPhotoFileName: photoFileName,
+      FirestoreFieldName.committeeMemberStreet: street,
+      FirestoreFieldName.committeeMemberCity: city,
+      FirestoreFieldName.committeeMemberState: state,
+      FirestoreFieldName.committeeMemberZip: zip,
     };
   }
 

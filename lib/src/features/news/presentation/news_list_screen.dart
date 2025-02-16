@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:social_app_2/src/constants/strings.dart';
-import 'package:social_app_2/src/features/auth/data/auth_repository.dart';
+import 'package:social_app_2/src/features/components/admin_only/admin_only_widget.dart';
 import 'package:social_app_2/src/features/components/app_bar/home_app_bar.dart';
-import 'package:social_app_2/src/features/components/drawer/app_drawer_view.dart';
 import 'package:social_app_2/src/features/news/presentation/sliver_news_grid.dart';
 import 'package:social_app_2/src/routing/app_router.dart';
 
@@ -44,14 +43,22 @@ class _NewsListScreenState extends ConsumerState<NewsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(authStateChangesProvider).value;
     return Scaffold(
       appBar: HomeAppBar(
         title: Strings.news,
-        showAddButton: true,
-        onPressed: () => context.goNamed(AppRoute.addNews.name),
+        actions: [
+          AdminOnlyWidget(
+            child: IconButton(
+              onPressed: () {
+                // TODO uncomment onPressed
+              },
+              // onPressed: () => context.goNamed(AppRoute.addNews.name),
+              icon: Icon(Icons.add),
+            ),
+          ),
+        ],
       ),
-      drawer: currentUser != null ? const AppDrawerView() : null,
+      // drawer: currentUser != null ? const AppDrawerView() : null,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -61,10 +68,13 @@ class _NewsListScreenState extends ConsumerState<NewsListScreen> {
           //   child: NewsSearchTextField(),
           // ),
           SliverNewsGrid(
-            onPressed: (context, newsId) => context.goNamed(
-              AppRoute.singleNews.name,
-              pathParameters: {'id': newsId},
-            ),
+            onPressed: (context, newsId) {
+              // TODO uncomment onPressed
+            },
+            // onPressed: (context, newsId) => context.goNamed(
+            //   AppRoute.singleNews.name,
+            //   pathParameters: {'id': newsId},
+            // ),
           ),
         ],
       ),

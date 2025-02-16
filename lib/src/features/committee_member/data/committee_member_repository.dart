@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:social_app_2/src/constants/firebase_collection_name.dart';
-import 'package:social_app_2/src/constants/firebase_field_name.dart';
+import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/committee_member/domain/committee_member.dart';
 import 'package:social_app_2/src/features/committee_member/domain/committee_member_payload.dart';
 import 'package:social_app_2/src/features/committee_member/typedefs/committee_member_id.dart';
@@ -50,7 +50,7 @@ class CommitteeMemberRepository {
       // first check if committee member already exist
       final committeeMemberInfo = await _firestore
           .collection(committeeMemberPath())
-          .where(FirebaseFieldName.committeeMemberId,
+          .where(FirestoreFieldName.committeeMemberId,
               isEqualTo: committeeMemberId)
           .limit(1)
           .get();
@@ -60,26 +60,28 @@ class CommitteeMemberRepository {
         await committeeMemberInfo.docs.first.reference.set(
           {
             // FirebaseFieldName.committeeMemberId: committeeMember.committeeId,
-            FirebaseFieldName.committeeMemberName: committeeMember.name,
-            FirebaseFieldName.committeeMemberEmail: committeeMember.email,
-            FirebaseFieldName.committeeMemberPhoneNumber:
+            FirestoreFieldName.committeeMemberName: committeeMember.name,
+            FirestoreFieldName.committeeMemberEmail: committeeMember.email,
+            FirestoreFieldName.committeeMemberPhoneNumber:
                 committeeMember.phoneNumber,
-            FirebaseFieldName.committeeMemberTitle: committeeMember.title,
-            FirebaseFieldName.committeeMemberTitleId: committeeMember.titleId,
-            FirebaseFieldName.committeeMemberPhotoUrl: committeeMember.photoUrl,
-            FirebaseFieldName.committeeMemberPhotoFileName:
+            FirestoreFieldName.committeeMemberTitle: committeeMember.title,
+            FirestoreFieldName.committeeMemberTitleId: committeeMember.titleId,
+            FirestoreFieldName.committeeMemberPhotoUrl:
+                committeeMember.photoUrl,
+            FirestoreFieldName.committeeMemberPhotoFileName:
                 committeeMember.photoFileName,
-            FirebaseFieldName.committeeMemberPostedBy: committeeMember.postedBy,
-            FirebaseFieldName.committeeMemberSince:
+            FirestoreFieldName.committeeMemberPostedBy:
+                committeeMember.postedBy,
+            FirestoreFieldName.committeeMemberSince:
                 committeeMember.memberSince.millisecondsSinceEpoch,
-            FirebaseFieldName.committeeMemberPostDate:
+            FirestoreFieldName.committeeMemberPostDate:
                 DateTime.now().millisecondsSinceEpoch,
-            FirebaseFieldName.committeeMemberUpdateDate:
+            FirestoreFieldName.committeeMemberUpdateDate:
                 DateTime.now().millisecondsSinceEpoch,
-            FirebaseFieldName.committeeMemberStreet: committeeMember.street,
-            FirebaseFieldName.committeeMemberCity: committeeMember.city,
-            FirebaseFieldName.committeeMemberState: committeeMember.state,
-            FirebaseFieldName.committeeMemberZip: committeeMember.zip,
+            FirestoreFieldName.committeeMemberStreet: committeeMember.street,
+            FirestoreFieldName.committeeMemberCity: committeeMember.city,
+            FirestoreFieldName.committeeMemberState: committeeMember.state,
+            FirestoreFieldName.committeeMemberZip: committeeMember.zip,
           },
           SetOptions(merge: true),
         );
@@ -140,7 +142,7 @@ class CommitteeMemberRepository {
     final committeeMemberInCollection = await _firestore
         .collection(FirebaseCollectionName.committee)
         .where(
-          FirebaseFieldName.id,
+          FirestoreFieldName.id,
           isEqualTo: id,
         )
         .limit(1)

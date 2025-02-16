@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:social_app_2/src/constants/firebase_field_name.dart';
+import 'package:social_app_2/src/constants/firestore_field_name.dart';
 
 @immutable
 class Family {
@@ -21,25 +21,25 @@ class Family {
 
   factory Family.fromMap(Map<String, dynamic> map) {
     return Family(
-      familyId: map[FirebaseFieldName.familyId],
-      primaryAccountId: map[FirebaseFieldName.primaryAccountId],
+      familyId: map[FirestoreFieldName.familyId],
+      primaryAccountId: map[FirestoreFieldName.primaryAccountId],
       memberAccountIds:
-          List<String>.from(map[FirebaseFieldName.memberAccountIds]),
+          List<String>.from(map[FirestoreFieldName.memberAccountIds]),
       membershipStartDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.membershipStartDate]),
+          map[FirestoreFieldName.membershipStartDate]),
       membershipEndDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.membershipEndDate]),
+          map[FirestoreFieldName.membershipEndDate]),
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      FirebaseFieldName.familyId: familyId,
-      FirebaseFieldName.primaryAccountId: primaryAccountId,
-      FirebaseFieldName.memberAccountIds: memberAccountIds,
-      FirebaseFieldName.membershipStartDate:
+      FirestoreFieldName.familyId: familyId,
+      FirestoreFieldName.primaryAccountId: primaryAccountId,
+      FirestoreFieldName.memberAccountIds: memberAccountIds,
+      FirestoreFieldName.membershipStartDate:
           membershipStartDate.millisecondsSinceEpoch,
-      FirebaseFieldName.membershipEndDate:
+      FirestoreFieldName.membershipEndDate:
           membershipEndDate.millisecondsSinceEpoch,
     };
   }

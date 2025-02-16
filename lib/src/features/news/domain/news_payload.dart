@@ -1,6 +1,6 @@
 import 'dart:collection' show MapView;
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:social_app_2/src/constants/firebase_field_name.dart';
+import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/news/domain/news.dart';
 import 'package:social_app_2/src/features/news/typedefs/news_id.dart';
 
@@ -24,21 +24,22 @@ class NewsPayload extends MapView<String, dynamic> {
     String? zip,
     int views = 0,
   }) : super({
-          FirebaseFieldName.newsId: id,
-          FirebaseFieldName.newsTitle: title,
-          FirebaseFieldName.newsListTitle: listTitle,
-          FirebaseFieldName.newsType: type,
-          FirebaseFieldName.newsDetails: newsDetails,
-          FirebaseFieldName.newsPostedBy: postedBy,
-          FirebaseFieldName.newsImageUrl: imageUrl,
-          FirebaseFieldName.newsImageFileName: imageFileName,
-          FirebaseFieldName.newsPostDate: postDate.millisecondsSinceEpoch,
-          FirebaseFieldName.newsLastUpdated: lastUpdated.millisecondsSinceEpoch,
-          FirebaseFieldName.newsLocation: location,
-          FirebaseFieldName.newsAddress: address,
-          FirebaseFieldName.city: city,
-          FirebaseFieldName.state: state,
-          FirebaseFieldName.zip: zip,
+          FirestoreFieldName.newsId: id,
+          FirestoreFieldName.newsTitle: title,
+          FirestoreFieldName.newsListTitle: listTitle,
+          FirestoreFieldName.newsType: type,
+          FirestoreFieldName.newsDetails: newsDetails,
+          FirestoreFieldName.newsPostedBy: postedBy,
+          FirestoreFieldName.newsImageUrl: imageUrl,
+          FirestoreFieldName.newsImageFileName: imageFileName,
+          FirestoreFieldName.newsPostDate: postDate.millisecondsSinceEpoch,
+          FirestoreFieldName.newsLastUpdateAt:
+              lastUpdated.millisecondsSinceEpoch,
+          FirestoreFieldName.newsLocation: location,
+          FirestoreFieldName.newsAddress: address,
+          FirestoreFieldName.city: city,
+          FirestoreFieldName.state: state,
+          FirestoreFieldName.zip: zip,
         });
 
   NewsPayload.fromNews(News news)
@@ -63,24 +64,24 @@ class NewsPayload extends MapView<String, dynamic> {
 
   factory NewsPayload.fromMap(Map<String, dynamic> map) {
     return NewsPayload(
-      id: map[FirebaseFieldName.newsId] as String,
-      listTitle: map[FirebaseFieldName.newsListTitle] as String,
-      postedBy: map[FirebaseFieldName.newsPostedBy] as String,
+      id: map[FirestoreFieldName.newsId] as String,
+      listTitle: map[FirestoreFieldName.newsListTitle] as String,
+      postedBy: map[FirestoreFieldName.newsPostedBy] as String,
       postDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.newsPostDate] as int),
+          map[FirestoreFieldName.newsPostDate] as int),
       lastUpdated: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.newsLastUpdated] as int),
-      title: map[FirebaseFieldName.newsTitle] as String,
-      type: map[FirebaseFieldName.newsType] as String?,
-      newsDetails: map[FirebaseFieldName.newsDetails] as String,
-      imageUrl: map[FirebaseFieldName.newsImageUrl] as String?,
-      imageFileName: map[FirebaseFieldName.newsImageFileName] as String?,
-      location: map[FirebaseFieldName.newsLocation] as String?,
-      address: map[FirebaseFieldName.newsAddress] as String?,
-      city: map[FirebaseFieldName.city] as String?,
-      state: map[FirebaseFieldName.state] as String?,
-      zip: map[FirebaseFieldName.zip] as String?,
-      views: (map[FirebaseFieldName.newsViews] as int?) ?? 0,
+          map[FirestoreFieldName.newsLastUpdateAt] as int),
+      title: map[FirestoreFieldName.newsTitle] as String,
+      type: map[FirestoreFieldName.newsType] as String?,
+      newsDetails: map[FirestoreFieldName.newsDetails] as String,
+      imageUrl: map[FirestoreFieldName.newsImageUrl] as String?,
+      imageFileName: map[FirestoreFieldName.newsImageFileName] as String?,
+      location: map[FirestoreFieldName.newsLocation] as String?,
+      address: map[FirestoreFieldName.newsAddress] as String?,
+      city: map[FirestoreFieldName.city] as String?,
+      state: map[FirestoreFieldName.state] as String?,
+      zip: map[FirestoreFieldName.zip] as String?,
+      views: (map[FirestoreFieldName.newsViews] as int?) ?? 0,
     );
   }
 

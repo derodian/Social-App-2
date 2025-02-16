@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:social_app_2/src/constants/firebase_collection_name.dart';
-import 'package:social_app_2/src/features/auth/data/auth_repository.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 import 'package:social_app_2/src/features/committee_member/data/committee_member_repository.dart';
 import 'package:social_app_2/src/features/committee_member/domain/committee_member.dart';
 import 'package:social_app_2/src/features/committee_member/typedefs/committee_member_id.dart';
@@ -46,7 +46,8 @@ class AddEditCommitteeMemberScreenController
   }) async {
     final committeeMemberRepository =
         ref.watch(committeeMemberRepositoryProvider);
-    final userId = ref.watch(authRepositoryProvider).currentUser?.id;
+    final user = ref.read(authControllerProvider).value;
+    final userId = user?.id;
     try {
       state = const AsyncLoading();
       String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
@@ -101,7 +102,7 @@ class AddEditCommitteeMemberScreenController
         state = value;
         if (success) {
           // on success, go back to previous screen
-          ref.read(goRouterProvider).pop();
+          ref.read(appRouterProvider).pop();
         }
       }
       return success;
@@ -125,7 +126,8 @@ class AddEditCommitteeMemberScreenController
       state = value;
       if (success) {
         // on success, go back to committee list screen
-        ref.read(goRouterProvider).goNamed(AppRoute.committeeMembers.name);
+        // TODO: remove comments from below code
+        // ref.read(appRouterProvider).goNamed(AppRoute.committeeMembers.name);
       }
     }
   }

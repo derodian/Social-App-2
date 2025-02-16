@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-import 'package:social_app_2/src/constants/firebase_field_name.dart';
+import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/events/typedefs/event_id.dart';
 
 class Event extends Equatable {
@@ -47,62 +47,62 @@ class Event extends Equatable {
   });
 
   factory Event.fromMap(Map<String, dynamic> map) {
-    if (!map.containsKey(FirebaseFieldName.eventId)) {
+    if (!map.containsKey(FirestoreFieldName.eventId)) {
       throw const FormatException('Missing required field: eventId');
     }
     // Add similar checks for other required fields
     return Event(
-      id: map[FirebaseFieldName.eventId] as String,
-      listTitle: map[FirebaseFieldName.eventListTitle] as String,
-      postedBy: map[FirebaseFieldName.eventPostedBy] as String,
+      id: map[FirestoreFieldName.eventId] as String,
+      listTitle: map[FirestoreFieldName.eventListTitle] as String,
+      postedBy: map[FirestoreFieldName.eventPostedBy] as String,
       // postDate: DateTime.fromMillisecondsSinceEpoch(
       //     map[FirebaseFieldName.eventPostDate]),
       // lastUpdated: DateTime.fromMillisecondsSinceEpoch(
       //     map[FirebaseFieldName.eventLastUpdated]),
       postDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.eventPostDate] as int),
+          map[FirestoreFieldName.eventPostDate] as int),
       lastUpdated: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.eventLastUpdated] as int),
-      type: map[FirebaseFieldName.eventType] as String?,
-      title: map[FirebaseFieldName.eventTitle] as String,
-      status: map[FirebaseFieldName.eventStatus] as String,
-      eventDetails: map[FirebaseFieldName.eventDetails] as String,
-      imageUrl: map[FirebaseFieldName.eventImageUrl] as String?,
-      imageFileName: map[FirebaseFieldName.eventImageFileName] as String?,
+          map[FirestoreFieldName.eventLastUpdateAt] as int),
+      type: map[FirestoreFieldName.eventType] as String?,
+      title: map[FirestoreFieldName.eventTitle] as String,
+      status: map[FirestoreFieldName.eventStatus] as String,
+      eventDetails: map[FirestoreFieldName.eventDetails] as String,
+      imageUrl: map[FirestoreFieldName.eventImageUrl] as String?,
+      imageFileName: map[FirestoreFieldName.eventImageFileName] as String?,
       startDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.eventStartDate] as int),
+          map[FirestoreFieldName.eventStartDate] as int),
       endDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirebaseFieldName.eventEndDate] as int),
-      location: map[FirebaseFieldName.eventLocation] as String?,
-      address: map[FirebaseFieldName.eventAddress] as String?,
-      city: map[FirebaseFieldName.eventCity] as String?,
-      state: map[FirebaseFieldName.eventState] as String?,
-      zip: map[FirebaseFieldName.eventZip] as String?,
-      views: (map[FirebaseFieldName.eventViews] as int?) ?? 0,
+          map[FirestoreFieldName.eventEndDate] as int),
+      location: map[FirestoreFieldName.eventLocation] as String?,
+      address: map[FirestoreFieldName.eventAddress] as String?,
+      city: map[FirestoreFieldName.eventCity] as String?,
+      state: map[FirestoreFieldName.eventState] as String?,
+      zip: map[FirestoreFieldName.eventZip] as String?,
+      views: (map[FirestoreFieldName.eventViews] as int?) ?? 0,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      FirebaseFieldName.eventId: id,
-      FirebaseFieldName.eventListTitle: listTitle,
-      FirebaseFieldName.eventPostedBy: postedBy,
-      FirebaseFieldName.eventPostDate: postDate.millisecondsSinceEpoch,
-      FirebaseFieldName.eventLastUpdated: lastUpdated.millisecondsSinceEpoch,
-      FirebaseFieldName.eventType: type,
-      FirebaseFieldName.eventTitle: title,
-      FirebaseFieldName.eventStatus: status,
-      FirebaseFieldName.eventDetails: eventDetails,
-      FirebaseFieldName.eventImageUrl: imageUrl,
-      FirebaseFieldName.eventImageFileName: imageFileName,
-      FirebaseFieldName.eventStartDate: startDate.millisecondsSinceEpoch,
-      FirebaseFieldName.eventEndDate: endDate.millisecondsSinceEpoch,
-      FirebaseFieldName.eventLocation: location,
-      FirebaseFieldName.eventAddress: address,
-      FirebaseFieldName.eventCity: city,
-      FirebaseFieldName.eventState: state,
-      FirebaseFieldName.eventZip: zip,
-      FirebaseFieldName.eventViews: views,
+      FirestoreFieldName.eventId: id,
+      FirestoreFieldName.eventListTitle: listTitle,
+      FirestoreFieldName.eventPostedBy: postedBy,
+      FirestoreFieldName.eventPostDate: postDate.millisecondsSinceEpoch,
+      FirestoreFieldName.eventLastUpdateAt: lastUpdated.millisecondsSinceEpoch,
+      FirestoreFieldName.eventType: type,
+      FirestoreFieldName.eventTitle: title,
+      FirestoreFieldName.eventStatus: status,
+      FirestoreFieldName.eventDetails: eventDetails,
+      FirestoreFieldName.eventImageUrl: imageUrl,
+      FirestoreFieldName.eventImageFileName: imageFileName,
+      FirestoreFieldName.eventStartDate: startDate.millisecondsSinceEpoch,
+      FirestoreFieldName.eventEndDate: endDate.millisecondsSinceEpoch,
+      FirestoreFieldName.eventLocation: location,
+      FirestoreFieldName.eventAddress: address,
+      FirestoreFieldName.eventCity: city,
+      FirestoreFieldName.eventState: state,
+      FirestoreFieldName.eventZip: zip,
+      FirestoreFieldName.eventViews: views,
     };
   }
 

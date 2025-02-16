@@ -1,20 +1,78 @@
-import 'dart:async';
-
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:logger/logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
+
+part 'location_service.g.dart';
 
 class LocationService {
-  final log = Logger();
-  Future<List<Location>> getLocationFromAddress(String address) async {
+  Future<Position?> getCurrentLocation() async {
     try {
-      List<Location> locations = await locationFromAddress(address)
-          .timeout(const Duration(seconds: 10), onTimeout: () {
-        throw TimeoutException('Address lookup timed out');
-      });
-      return locations;
+      final permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        final requested = await Geolocator.requestPermission();
+        if (requested == LocationPermission.denied) {
+          return null;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return null;
+      }
+
+      return await Geolocator.getCurrentPosition();
     } catch (e) {
-      log.e('Error in getLocationFromAddress: $e');
-      rethrow;
+      debugPrint('Error getting location: $e');
+      return null;
     }
   }
+
+  Future<Location?> getLocationFromAddress(String address) async {
+    try {
+      final locations = await locationFromAddress(address);
+      return locations.isNotEmpty ? locations.first : null;
+    } catch (e) {
+      debugPrint('Error geocoding address: $e');
+      return null;
+    }
+  }
+
+  Future<double?> getDistanceToAddress(String address) async {
+    try {
+      final currentLocation = await getCurrentLocation();
+      if (currentLocation == null) return null;
+
+      final targetLocation = await getLocationFromAddress(address);
+      if (targetLocation == null) return null;
+
+      return Geolocator.distanceBetween(
+        currentLocation.latitude,
+        currentLocation.longitude,
+        targetLocation.latitude,
+        targetLocation.longitude,
+      );
+    } catch (e) {
+      debugPrint('Error calculating distance: $e');
+      return null;
+    }
+  }
+}
+
+@Riverpod(keepAlive: true)
+LocationService locationService(Ref ref) {
+  return LocationService();
+}
+
+@riverpod
+Future<double?> distanceToAddress(
+  Ref ref,
+  String address,
+) async {
+  // Don't calculate distance if deletion is in progress
+  final isDeleting = ref.watch(deletionStateProvider);
+  if (isDeleting) return null;
+
+  return ref.watch(locationServiceProvider).getDistanceToAddress(address);
 }

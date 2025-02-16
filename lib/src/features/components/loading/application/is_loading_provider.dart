@@ -1,12 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_app_2/src/features/auth/presentation/account/account_screen_controller.dart';
-import 'package:social_app_2/src/features/auth/presentation/email_not_verified/email_not_verified_screen_controller.dart';
-import 'package:social_app_2/src/features/auth/presentation/sign_in/sign_in_screen_controller.dart';
+import 'package:social_app_2/src/features/auth/presentation/account/app_user_controller.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 
 final isLoadingProvider = Provider.autoDispose<bool>((ref) {
-  final signInController = ref.watch(signInScreenControllerProvider);
-  final emailMailNotVerifiedScreenController =
-      ref.watch(emailNotVerifiedScreenControllerProvider);
+  final authController = ref.watch(authControllerProvider);
+  // final emailVerificationController =
+  //     ref.watch(emailVerificationControllerProvider);
   // final detailNewsScreenController =
   //     ref.watch(detailNewsScreenControllerProvider);
   // final addEditNewsScreenController =
@@ -24,7 +23,7 @@ final isLoadingProvider = Provider.autoDispose<bool>((ref) {
   //     ref.watch(appUsersListScreenControllerProvider);
   // final detailAppUserScreenController =
   //     ref.watch(detailAppUserScreenControllerProvider);
-  final accountScreenController = ref.watch(accountScreenControllerProvider);
+  final appUserController = ref.watch(appUserControllerProvider);
   // final editAccountScreenController =
   //     ref.watch(editAccountScreenControllerProvider);
   // final isUploadingImage = ref.watch(imageUploaderProvider);
@@ -37,8 +36,7 @@ final isLoadingProvider = Provider.autoDispose<bool>((ref) {
   //     isSendingComment ||
   //     isDeletingComment ||
   //     isDeletingPost;
-  return signInController.isLoading ||
-      emailMailNotVerifiedScreenController.isLoading ||
+  return authController.isLoading ||
       // detailNewsScreenController.isLoading ||
       // addEditNewsScreenController.isLoading ||
       // detailEventsScreenController.isLoading ||
@@ -46,5 +44,5 @@ final isLoadingProvider = Provider.autoDispose<bool>((ref) {
       // addEditCommitteeScreenController.isLoading ||
       // appUsersListScreenController.isLoading ||
       // detailAppUserScreenController.isLoading ||
-      accountScreenController.isLoading;
+      appUserController.isLoading;
 });

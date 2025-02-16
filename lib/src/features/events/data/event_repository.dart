@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:social_app_2/src/constants/firebase_collection_name.dart';
-import 'package:social_app_2/src/constants/firebase_field_name.dart';
+import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/events/domain/event.dart';
 import 'package:social_app_2/src/features/events/domain/event_payload.dart';
 import 'package:social_app_2/src/features/events/typedefs/event_id.dart';
@@ -178,9 +178,9 @@ class EventRepository {
         final eventRef = _firestore.doc(singleEventPath(id));
         final snapshot = await transaction.get(eventRef);
         final currentViews =
-            (snapshot.data()?[FirebaseFieldName.eventViews] as int?) ?? 0;
-        transaction
-            .update(eventRef, {FirebaseFieldName.eventViews: currentViews + 1});
+            (snapshot.data()?[FirestoreFieldName.eventViews] as int?) ?? 0;
+        transaction.update(
+            eventRef, {FirestoreFieldName.eventViews: currentViews + 1});
       });
     } catch (e) {
       _log.e('Error incrementing views for event $id: $e');
@@ -220,24 +220,24 @@ class EventRepository {
 
   Query<Event> _eventsRef() => _firestore
       .collection(eventPath())
-      .where(FirebaseFieldName.eventEndDate,
+      .where(FirestoreFieldName.eventEndDate,
           isGreaterThanOrEqualTo: DateTime.now().millisecondsSinceEpoch)
       .withConverter(
         fromFirestore: (doc, _) => Event.fromMap(doc.data()!),
         toFirestore: (Event event, options) => event.toMap(),
       )
-      .orderBy(FirebaseFieldName.eventEndDate)
-      .orderBy(FirebaseFieldName.eventStartDate, descending: false);
+      .orderBy(FirestoreFieldName.eventEndDate)
+      .orderBy(FirestoreFieldName.eventStartDate, descending: false);
 
   Query<Event> _pastEventsRef() => _firestore
       .collection(eventPath())
-      .where(FirebaseFieldName.eventEndDate,
+      .where(FirestoreFieldName.eventEndDate,
           isLessThan: DateTime.now().millisecondsSinceEpoch)
       .withConverter(
         fromFirestore: (doc, _) => Event.fromMap(doc.data()!),
         toFirestore: (Event event, options) => event.toMap(),
       )
-      .orderBy(FirebaseFieldName.eventEndDate, descending: true);
+      .orderBy(FirestoreFieldName.eventEndDate, descending: true);
 
   // * Temporary search implementation
   // * Note: this is quite inefficient as it pulls the

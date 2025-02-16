@@ -5,6 +5,7 @@ import 'package:social_app_2/global_firebase_options.dart';
 import 'package:social_app_2/src/app_bootstrap.dart';
 import 'package:social_app_2/src/app_bootstrap_firebase.dart';
 import 'package:social_app_2/src/features/onboarding/data/onboarding_repository.dart';
+import 'package:social_app_2/src/features/onboarding/presentation/onboarding_controller.dart';
 // Future<void> setupEmulators() async {
 //   await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
 //   FirebaseFirestore.instance.useFirestoreEmulator('127.0.0.1', 8080);
@@ -27,7 +28,7 @@ Future<void> runMainApp({required FirebaseOptions firebaseOptions}) async {
   final container = await appBootstrap.createFirebaseProviderContainer();
 
   // Onboarding
-  await container.read(onboardingRepositoryProvider.future);
+  await container.read(onboardingControllerProvider.notifier).initializeState();
   // use the container above to create the root widget
   final root = appBootstrap.createRootWidget(container: container);
   // start the app
