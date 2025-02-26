@@ -25,9 +25,6 @@ class _WaitingApprovalScreenState extends ConsumerState<WaitingApprovalScreen> {
             .startPeriodicRefresh();
       }
     });
-    // Future(() => ref
-    //     .read(waitingApprovalScreenControllerProvider.notifier)
-    //     .startPeriodicRefresh());
   }
 
   void _showSupportDialog() {
@@ -56,29 +53,6 @@ class _WaitingApprovalScreenState extends ConsumerState<WaitingApprovalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // // Listen for approval
-    // ref.listen<AsyncValue<AuthResult?>>(
-    //   authControllerProvider,
-    //   (_, next) {
-    //     next.whenData((result) {
-    //       // if (user?.isAdmin ?? false) {
-    //       //   ref.read(routerControllerProvider.notifier).goToHome();
-    //       // }
-    //       if (result case AuthUser(:final user)) {
-    //         if (user.isAdmin) {
-    //           ref.read(routerControllerProvider.notifier).goToHome();
-    //         } else if (!user.isEmailVerified) {
-    //           ref
-    //               .read(routerControllerProvider.notifier)
-    //               .goToEmailVerification();
-    //         } else if (!user.isApproved) {
-    //           ref.read(routerControllerProvider.notifier).goToWaitingApproval();
-    //         }
-    //       }
-    //     });
-    //   },
-    // );
-
     return Scaffold(
       body: Stack(
         children: [

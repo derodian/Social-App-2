@@ -69,44 +69,6 @@ Future<bool?> emailPasswordInputDialog({
             textInputAction: TextInputAction.done,
             keyboardAppearance: Brightness.dark,
           ),
-          // CustomTextFormField(
-          //   key: const Key('email'),
-          //   controller: emailController,
-          //   labelText: Strings.email,
-          //   errorText: Strings.invalidEmailErrorText,
-          //   isEnabled: true,
-          //   isPassword: false,
-          //   autocorrect: false,
-          //   textInputAction: TextInputAction.next,
-          //   keyboardAppearance: Brightness.light,
-          //   validationMessage: Strings.invalidEmailErrorText,
-          //   validator: (value) {
-          //     if (value == null || value.isEmpty) {
-          //       return 'Email cannot be empty';
-          //     }
-
-          //     return null;
-          //   },
-          // ),
-          // CustomTextFormField(
-          //   key: const Key('password'),
-          //   controller: passwordController,
-          //   labelText: Strings.password,
-          //   errorText: Strings.invalidPasswordTooShort,
-          //   isEnabled: true,
-          //   isPassword: true,
-          //   autocorrect: false,
-          //   textInputAction: TextInputAction.done,
-          //   keyboardAppearance: Brightness.light,
-          //   validationMessage: Strings.invalidPasswordTooShort,
-          //   validator: (value) {
-          //     if (value == null || value.isEmpty) {
-          //       return 'Password cannot be empty';
-          //     }
-
-          //     return null;
-          //   },
-          // ),
         ],
       ),
     );

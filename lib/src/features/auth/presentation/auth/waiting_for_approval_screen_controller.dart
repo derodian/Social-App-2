@@ -70,8 +70,6 @@ Thank you.''';
   }
 
   Future<void> signOut() async {
-    // await ref.read(authControllerProvider.notifier).signOut();
-    // ref.read(routerControllerProvider.notifier).goToAuth();
     if (_disposed) return;
 
     try {

@@ -49,16 +49,6 @@ class _EmailReauthenticationDialogState
 
     setState(() => _isAuthenticating = true);
 
-    // try {
-    //   // Now handle the boolean result
-    //   final success = await widget.onSubmit(_passwordController.text);
-    //   if (!mounted) return;
-    //   Navigator.of(context).pop(success);
-    // } catch (e) {
-    //   if (!mounted) return;
-    //   setState(() => _isAuthenticating = false);
-    //   // Error is handled by the onSubmit callback
-    // }
     try {
       debugPrint('Dialog: Submitting password');
       final success = await widget.onSubmit(_passwordController.text);

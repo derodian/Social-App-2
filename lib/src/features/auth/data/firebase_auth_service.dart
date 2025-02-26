@@ -1,17 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:social_app_2/src/constants/firebase_collection_name.dart';
-import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/auth/data/app_user_storage_service.dart';
 import 'package:social_app_2/src/features/auth/data/apple_auth_service.dart';
 import 'package:social_app_2/src/features/auth/data/auth_service.dart';
 import 'package:social_app_2/src/features/auth/data/google_auth_service.dart';
 import 'package:social_app_2/src/features/auth/domain/app_user.dart';
 import 'package:social_app_2/src/features/auth/domain/provider_data.dart';
-import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 
 part 'firebase_auth_service.g.dart';
 
@@ -78,66 +74,6 @@ class FirebaseAuthService implements AuthService {
     required String password,
   }) async {
     try {
-      // final userCredential = await _auth.signInWithEmailAndPassword(
-      //   email: email,
-      //   password: password,
-      // );
-      // // final user = userCredential.user!;
-
-      // // // Force sync verification status after sign-in
-      // // await user.reload();
-      // // final isVerifiedInAuth = user.emailVerified;
-
-      // if (userCredential.user == null) {
-      //   throw Exception('No user found after sign in');
-      // }
-
-      // // // Update last login
-      // // // Get Firestore user
-      // // final appUser = await _userStorage.getUser(user.uid);
-      // // if (appUser == null) throw Exception('User data not found');
-
-      // // // Update Firestore if needed
-      // // if (appUser.isEmailVerified != isVerifiedInAuth) {
-      // //   final updatedUser = appUser.withEmailVerification(isVerifiedInAuth);
-      // //   await _userStorage.updateUser(updatedUser);
-      // //   await _userStorage.updateLastLogin(appUser.id);
-      // //   return updatedUser;
-      // // }
-
-      // // return appUser;
-
-      // // Get user from Firestore with retry
-      // AppUser? user;
-      // int retryCount = 0;
-      // while (user == null && retryCount < 3) {
-      //   try {
-      //     user = await _userStorage.getUser(userCredential.user!.uid);
-      //     if (user == null) {
-      //       retryCount++;
-      //       await Future.delayed(Duration(milliseconds: 500 * retryCount));
-      //     }
-      //   } catch (e) {
-      //     debugPrint('Error getting user data (attempt ${retryCount + 1}): $e');
-      //     retryCount++;
-      //     if (retryCount >= 3) rethrow;
-      //     await Future.delayed(Duration(milliseconds: 500 * retryCount));
-      //   }
-      // }
-
-      // if (user == null) {
-      //   throw Exception('User data not found after multiple attempts');
-      // }
-
-      // // Update Firestore if needed
-      // if (userCredential.user!.emailVerified && !user.isEmailVerified) {
-      //   debugPrint('Updating email verification status in Firestore');
-      //   user = user.withEmailVerification(true);
-      //   await _userStorage.updateUser(user);
-      // }
-
-      // await _userStorage.updateLastLogin(user.id);
-      // return user;
       debugPrint('Attempting sign in for email: $email');
 
       // 1. Sign in with Firebase Auth
@@ -265,58 +201,6 @@ class FirebaseAuthService implements AuthService {
       throw Exception('Failed to create account: ${e.toString()}');
     }
   }
-  // Future<AppUser> createUserWithEmailAndPassword({
-  //   required String email,
-  //   required String password,
-  //   required String displayName,
-  //   String? phoneNumber,
-  // }) async {
-  //   try {
-  //     debugPrint('Starting sign up process');
-  //     final userCredential = await _auth.createUserWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-
-  //     if (userCredential.user == null) {
-  //       throw Exception('Failed to create user');
-  //     }
-
-  //     debugPrint('Created auth user with ID: ${userCredential.user!.uid}');
-
-  //     // Create AppUser
-  //     final newUser = AppUser.create(
-  //       id: userCredential.user!.uid,
-  //       email: email,
-  //       displayName: displayName,
-  //       phoneNumber: phoneNumber,
-  //     );
-
-  //     // Save to storage
-  //     // await _userStorage.createUser(newUser);
-  //     debugPrint('Created AppUser object, attempting to save to Firestore');
-
-  //     // Save to Firestore
-  //     try {
-  //       await _userStorage.createUser(newUser);
-  //       debugPrint('Successfully saved user to Firestore');
-  //     } catch (e) {
-  //       debugPrint('Error saving user to Firestore: $e');
-  //       // Clean up by deleting the auth user if Firestore save fails
-  //       await userCredential.user!.delete();
-  //       throw Exception('Failed to create user profile: $e');
-  //     }
-
-  //     // Send email verification
-  //     await sendEmailVerification();
-
-  //     return newUser;
-  //   } on FirebaseAuthException catch (e) {
-  //     throw _handleAuthException(e);
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
 
   @override
   Future<List<AppAuthProvider>> checkEmailProviders(String email) async {
@@ -679,33 +563,7 @@ class FirebaseAuthService implements AuthService {
       // Get fresh Firebase Auth user after reload
       final freshUser = _auth.currentUser;
       if (freshUser == null) throw Exception('User not found after reload');
-      // final isVerifiedInAuth = freshUser.emailVerified;
 
-      // // Get current user from Firestore
-      // final appUser = await _userStorage.getUser(freshUser.uid);
-
-      // if (appUser == null) throw Exception('User not found in database');
-
-      // debugPrint('Firebase Auth verified: ${freshUser.emailVerified}');
-      // debugPrint('Firestore verified: ${appUser.isEmailVerified}');
-
-      // // If verified in Firebase Auth but not in Firestore, update Firestore
-      // if (appUser.isEmailVerified != isVerifiedInAuth) {
-      //   debugPrint('Updating email verification status in Firestore');
-
-      //   final updatedUser = appUser.withEmailVerification(isVerifiedInAuth);
-      //   await _userStorage.updateUser(updatedUser);
-
-      //   // Wait for Firestore write completion
-      //   await FirebaseFirestore.instance
-      //       .collection(FirebaseCollectionName.users)
-      //       .doc(freshUser.uid)
-      //       .snapshots()
-      //       .firstWhere((doc) =>
-      //           doc[FirestoreFieldName.isEmailVerified] == isVerifiedInAuth);
-
-      //   debugPrint('Successfully updated email verification status');
-      // }
       // Get user from Firestore with retries
       AppUser? firestoreUser;
       int retries = 0;

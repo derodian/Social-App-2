@@ -38,24 +38,6 @@ class EmailVerificationController extends _$EmailVerificationController {
 
   // Listen to verification changes
   void _listenToVerificationStatus() {
-    // _verificationSubscription?.cancel();
-    // final authService = ref.read(authServiceProvider);
-
-    // _verificationSubscription =
-    //     authService.isEmailVerified.distinct().listen((isVerified) {
-    //   debugPrint('Email verification status changed: $isVerified');
-
-    //   if (isVerified && !state) {
-    //     // Update controller state
-    //     state = true;
-
-    //     // Navigate after a brief delay to allow UI to update
-    //     Future.delayed(const Duration(milliseconds: 500), () {
-    //       ref.read(routerControllerProvider.notifier).goToWaitingApproval();
-    //     });
-    //   }
-    // });
-
     // Listen to auth state changes
     ref.listen<AsyncValue<AuthResult?>>(authControllerProvider,
         (previous, next) {
@@ -93,17 +75,6 @@ class EmailVerificationController extends _$EmailVerificationController {
 
       // Force fresh Firestore read
       await ref.read(authControllerProvider.notifier).reload();
-
-      // final user = ref.read(authControllerProvider.notifier).currentUser;
-      // if (user == null) return;
-
-      // if (user.isEmailVerified) {
-      //   state = true;
-      //   _timer?.cancel();
-      //   await Future.delayed(
-      //       const Duration(milliseconds: 500)); // Allow UI update
-      //   ref.read(routerControllerProvider.notifier).goToWaitingApproval();
-      // }
     } catch (e) {
       if (showError) {
         rethrow;

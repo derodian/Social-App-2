@@ -619,77 +619,8 @@ class AppUserStorageService extends _$AppUserStorageService {
       debugPrint('Error creating user in Firestore: $e');
       throw Exception('Failed to create user profile: ${e.toString()}');
     }
-    // try {
-    //   debugPrint('Attempting to create user with ID: ${user.id}');
-
-    //   await _firestore.runTransaction((transaction) async {
-    //     final userDoc =
-    //         _firestore.collection(FirebaseCollectionName.users).doc(user.id);
-
-    //     final snapshot = await transaction.get(userDoc);
-
-    //     if (snapshot.exists) {
-    //       throw Exception('User already exists');
-    //     }
-
-    //     // Debug the data being saved
-    //     final firestoreData = user.toFirestore();
-    //     debugPrint('Saving user data to Firestore: $firestoreData');
-
-    //     // Set the data
-    //     transaction.set(userDoc, firestoreData);
-
-    //     debugPrint('Successfully created user in transaction');
-    //   });
-
-    //   // Verify the user was created
-    //   final createdUser = await getUser(user.id);
-    //   if (createdUser == null) {
-    //     throw Exception('User was not created successfully');
-    //   }
-
-    //   debugPrint('Successfully verified user creation');
-    // } catch (e, stack) {
-    //   debugPrint('Error creating user: $e');
-    //   debugPrint('Stack trace: $stack');
-    //   throw Exception('Failed to create user: $e');
-    // }
   }
 
-  // // Method to handle user creation or update from social auth
-  // Future<AppUser> createOrUpdateSocialUser(AppUser user) async {
-  //   return _runTransactionSafely((transaction) async {
-  //     final userDoc = _usersCollection.doc(user.id);
-  //     final snapshot = await transaction.get(userDoc);
-
-  //     if (snapshot.exists) {
-  //       // User exists, update last login and merge any new data
-  //       final existingUser = snapshot.toAppUser();
-  //       if (existingUser == null) throw Exception('Invalid user data');
-
-  //       final updatedUser = existingUser.copyWith(
-  //         lastLoginDate: DateTime.now(),
-  //         lastUpdateDate: DateTime.now(),
-  //         // Update these fields only if they're empty in existing user
-  //         displayName: existingUser.displayName.isEmpty
-  //             ? user.displayName
-  //             : existingUser.displayName,
-  //         profileImageURL: existingUser.profileImageURL ?? user.profileImageURL,
-  //         phoneNumber: existingUser.phoneNumber ?? user.phoneNumber,
-  //         // Always update these fields
-  //         isEmailVerified: true, // Social auth emails are typically verified
-  //         providerData: user.providerData,
-  //       );
-
-  //       transaction.update(userDoc, updatedUser.toFirestore());
-  //       return updatedUser;
-  //     } else {
-  //       // New user, create with social auth data
-  //       transaction.set(userDoc, user.toFirestore());
-  //       return user;
-  //     }
-  //   });
-  // }
   // Method to handle user creation or update from social auth
   Future<AppUser> createOrUpdateSocialUser(
       AppUser user, AppAuthProvider provider) async {

@@ -72,46 +72,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       await ref
           .read(authControllerProvider.notifier)
           .signInWithSocialProvider(provider);
-      // // Get user
-      // final resultUser = await ref
-      //     .read(authControllerProvider.notifier)
-      //     .signInWithSocialProvider(provider);
-
-      // // Check if email exists before signing in
-      // final email = switch (provider) {
-      //   AppAuthProvider.google => '', // Get email from Google credential
-      //   AppAuthProvider.apple => '', // Get email from Apple credential
-      //   _ => throw UnsupportedError('Provider not supported'),
-      // };
-
-      // // Check if email exists
-      // final exists = await ref
-      //     .read(appUserStorageServiceProvider.notifier)
-      //     .checkEmailExists(email);
-
-      // if (exists && mounted) {
-      //   final shouldMerge = await showDialog<bool>(
-      //         context: context,
-      //         barrierDismissible: false,
-      //         builder: (context) => MergeAccountDialog(
-      //           email: email,
-      //           provider: provider,
-      //           onConfirm: () => Navigator.of(context).pop(true),
-      //           onCancel: () => Navigator.of(context).pop(false),
-      //         ),
-      //       ) ??
-      //       false;
-
-      //   if (!shouldMerge) {
-      //     setState(() => _isLoading = false);
-      //     return;
-      //   }
-      // }
-
-      // // Complete sign in
-      // await ref
-      //     .read(authControllerProvider.notifier)
-      //     .completeSocialSignIn(provider);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -124,32 +84,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
-
-  // Future<void> _handleSocialSignIn(AppAuthProvider provider) async {
-  //   try {
-  //     switch (provider) {
-  //       case AppAuthProvider.google:
-  //         await ref.read(authControllerProvider.notifier).signInWithGoogle();
-  //         break;
-  //       case AppAuthProvider.apple:
-  //         await ref.read(authControllerProvider.notifier).signInWithApple();
-  //         break;
-  //       // case AppAuthProvider.facebook:
-  //       //   await ref.read(authControllerProvider.notifier).signInWithFacebook();
-  //       //   break;
-  //       // case AppAuthProvider.github:
-  //       //   await ref.read(authControllerProvider.notifier).signInWithGithub();
-  //       //   break;
-  //       default:
-  //         break;
-  //     }
-  //   } catch (e) {
-  //     if (!mounted) return;
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text(e.toString())),
-  //     );
-  //   }
-  // }
 
   // In AuthScreen
   Future<void> _onSubmit(

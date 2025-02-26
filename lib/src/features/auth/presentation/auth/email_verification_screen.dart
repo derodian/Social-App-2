@@ -25,10 +25,7 @@ class _EmailVerificationScreenState
   @override
   void initState() {
     super.initState();
-    // // Delay initial check to avoid build-time conflicts
-    // Future(() => ref
-    //     .read(emailVerificationControllerProvider.notifier)
-    //     .startVerificationCheck());
+    // Delay initial check to avoid build-time conflicts
     // Start verification check after initial build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
@@ -40,9 +37,6 @@ class _EmailVerificationScreenState
   @override
   void dispose() {
     _resendTimer?.cancel();
-    // ref
-    //     .read(emailVerificationControllerProvider.notifier)
-    //     .stopVerificationCheck();
     super.dispose();
   }
 
@@ -152,47 +146,6 @@ class _EmailVerificationScreenState
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authControllerProvider);
-
-    // ref.listen<AsyncValue<AuthResult?>>(
-    //   authControllerProvider,
-    //   (_, next) {
-    //     next.whenData((result) {
-    //       if (result case AuthUser(:final user)) {
-    //         if (user.isAdmin) {
-    //           ref.read(routerControllerProvider.notifier).goToHome();
-    //         } else if (!user.isEmailVerified) {
-    //           ref
-    //               .read(routerControllerProvider.notifier)
-    //               .goToEmailVerification();
-    //         } else if (!user.isApproved) {
-    //           ref.read(routerControllerProvider.notifier).goToWaitingApproval();
-    //         }
-    //       }
-    //     });
-    //   },
-    // );
-
-    // return Scaffold(
-    //   body: authState.when(
-    //     data: (_) => Stack(
-    //       children: [
-    //         _buildContent(),
-    //         Positioned(
-    //           top: 16 + MediaQuery.of(context).padding.top,
-    //           right: 16,
-    //           child: IconButton.filled(
-    //             onPressed: _signOut,
-    //             icon: const Icon(Icons.logout),
-    //             tooltip: 'Sign out',
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //     error: (error, _) => _buildErrorState(error),
-    //     loading: () => const Center(child: CircularProgressIndicator()),
-    //   ),
-    // );
     return Scaffold(
       body: Stack(
         children: [

@@ -30,99 +30,6 @@ class ProfileScreen extends ConsumerStatefulWidget {
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen>
     with AsyncValueMixin<ProfileScreen> {
-  // Future<void> _handleDeleteAccount() async {
-  //   try {
-  //     // First confirmation
-  //     final confirmed = await _showDeleteConfirmationDialog();
-  //     if (!mounted || !confirmed) return;
-
-  //     // Get current user and their auth provider
-  //     final user = ref.read(authControllerProvider).value;
-  //     if (user == null) return;
-
-  //     // Set deletion state to true
-  //     ref.read(deletionStateProvider.notifier).setDeleting(true);
-
-  //     if (!mounted) return;
-
-  //     // Show loading dialog
-  //     BuildContext? loadingDialogContext;
-  //     showDialog(
-  //       context: context,
-  //       barrierDismissible: false,
-  //       builder: (dialogContext) {
-  //         loadingDialogContext = dialogContext;
-  //         return const AlertDialog(
-  //           content: Row(
-  //             children: [
-  //               CircularProgressIndicator(),
-  //               SizedBox(width: 16),
-  //               Text('Deleting account...'),
-  //             ],
-  //           ),
-  //         );
-  //       },
-  //     );
-
-  //     try {
-  //       // Handle reauthentication based on provider
-  //       bool reauthed = false;
-  //       if (user.provider == AppAuthProvider.email) {
-  //         reauthed = await EmailReauthenticationDialog.show(
-  //           context,
-  //           email: user.email,
-  //           onSubmit: (password) => _handlePasswordSubmission(password),
-  //         );
-  //       } else {
-  //         reauthed = await _showProviderReauthenticationDialog(user.provider);
-  //       }
-
-  //       // Check mounted state and reauthentication result
-  //       if (!mounted || !reauthed) {
-  //         // Clean up if needed
-  //         if (loadingDialogContext?.mounted ?? false) {
-  //           Navigator.of(loadingDialogContext!).pop();
-  //         }
-  //         ref.read(deletionStateProvider.notifier).setDeleting(false);
-  //         return;
-  //       }
-
-  //       debugPrint('Reauthentication successful, proceeding with deletion');
-
-  //       // Proceed with deletion
-  //       await ref.read(authControllerProvider.notifier).deleteAccount();
-  //       debugPrint('Account deletion completed');
-
-  //       // // Handle successful deletion
-  //       // if (mounted) {
-  //       //   if (loadingDialogContext?.mounted ?? false) {
-  //       //     Navigator.of(loadingDialogContext!).pop();
-  //       //   }
-  //       //   Navigator.of(context).pop(); // Return to previous screen
-  //       // }
-  //     } finally {
-  //       // Always reset deletion state
-  //       // ref.read(deletionStateProvider.notifier).setDeleting(false);
-  //       // Always clean up
-  //       if (loadingDialogContext?.mounted ?? false) {
-  //         Navigator.of(loadingDialogContext!).pop();
-  //       }
-  //       ref.read(deletionStateProvider.notifier).setDeleting(false);
-  //     }
-  //   } on FirebaseAuthException catch (e) {
-  //     if (mounted) {
-  //       ref
-  //           .read(snackBarControllerProvider.notifier)
-  //           .showError(_getErrorMessage(e));
-  //     }
-  //   } catch (e) {
-  //     if (!mounted) return;
-  //     ref
-  //         .read(snackBarControllerProvider.notifier)
-  //         .showError('Failed to delete account: $e');
-  //   }
-  // }
-
   Future<void> _handleDeleteAccount() async {
     late bool isDeletingState = false; // Track state locally
 
@@ -262,39 +169,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         ) ??
         false;
   }
-
-  // Future<bool> _handlePasswordSubmission(String password) async {
-  //   if (!mounted) return false;
-
-  //   try {
-  //     await ref
-  //         .read(authControllerProvider.notifier)
-  //         .reauthenticateWithPassword(
-  //           email: ref.read(authControllerProvider).value!.email,
-  //           password: password,
-  //         );
-  //     debugPrint('Password authentication successful');
-  //     return true;
-  //   } on FirebaseAuthException catch (e) {
-  //     debugPrint('Password authentication failed: $e');
-  //     String errorMessage = switch (e.code) {
-  //       'wrong-password' => 'Incorrect password. Please try again.',
-  //       'too-many-requests' => 'Too many attempts. Please try again later.',
-  //       'user-mismatch' => 'Authentication failed. Please try again.',
-  //       _ => 'Authentication failed: ${e.message}',
-  //     };
-  //     // Use global SnackBarService
-  //     ref.read(snackBarControllerProvider.notifier).showError(errorMessage);
-  //     rethrow;
-  //   } catch (e) {
-  //     debugPrint('Password authentication failed: $e');
-  //     // Use global SnackBarService
-  //     ref
-  //         .read(snackBarControllerProvider.notifier)
-  //         .showError('Authentication failed: $e');
-  //     return false;
-  //   }
-  // }
 
   Future<bool> _handlePasswordSubmission(String password) async {
     debugPrint('Starting password submission');
