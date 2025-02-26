@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_app_2/src/common_widgets/custom_primary_button.dart';
-import 'package:social_app_2/src/features/auth/domain/app_user.dart';
 import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 import 'package:social_app_2/src/features/auth/presentation/auth/email_verification_controller.dart';
 import 'package:social_app_2/src/features/components/animations/email_verification_animation_view.dart';
@@ -26,15 +25,24 @@ class _EmailVerificationScreenState
   @override
   void initState() {
     super.initState();
-    // Delay initial check to avoid build-time conflicts
-    Future(() => ref
-        .read(emailVerificationControllerProvider.notifier)
-        .startVerificationCheck());
+    // // Delay initial check to avoid build-time conflicts
+    // Future(() => ref
+    //     .read(emailVerificationControllerProvider.notifier)
+    //     .startVerificationCheck());
+    // Start verification check after initial build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(emailVerificationControllerProvider.notifier)
+          .startVerificationCheck();
+    });
   }
 
   @override
   void dispose() {
     _resendTimer?.cancel();
+    // ref
+    //     .read(emailVerificationControllerProvider.notifier)
+    //     .stopVerificationCheck();
     super.dispose();
   }
 
@@ -146,36 +154,59 @@ class _EmailVerificationScreenState
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
 
-    // Use AsyncValue.guard to handle navigation
-    ref.listen<AsyncValue<AppUser?>>(
-      authControllerProvider,
-      (_, next) {
-        next.whenData((user) {
-          if (user?.isEmailVerified ?? false) {
-            ref.read(routerControllerProvider.notifier).goToWaitingApproval();
-          }
-        });
-      },
-    );
+    // ref.listen<AsyncValue<AuthResult?>>(
+    //   authControllerProvider,
+    //   (_, next) {
+    //     next.whenData((result) {
+    //       if (result case AuthUser(:final user)) {
+    //         if (user.isAdmin) {
+    //           ref.read(routerControllerProvider.notifier).goToHome();
+    //         } else if (!user.isEmailVerified) {
+    //           ref
+    //               .read(routerControllerProvider.notifier)
+    //               .goToEmailVerification();
+    //         } else if (!user.isApproved) {
+    //           ref.read(routerControllerProvider.notifier).goToWaitingApproval();
+    //         }
+    //       }
+    //     });
+    //   },
+    // );
 
+    // return Scaffold(
+    //   body: authState.when(
+    //     data: (_) => Stack(
+    //       children: [
+    //         _buildContent(),
+    //         Positioned(
+    //           top: 16 + MediaQuery.of(context).padding.top,
+    //           right: 16,
+    //           child: IconButton.filled(
+    //             onPressed: _signOut,
+    //             icon: const Icon(Icons.logout),
+    //             tooltip: 'Sign out',
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //     error: (error, _) => _buildErrorState(error),
+    //     loading: () => const Center(child: CircularProgressIndicator()),
+    //   ),
+    // );
     return Scaffold(
-      body: authState.when(
-        data: (_) => Stack(
-          children: [
-            _buildContent(),
-            Positioned(
-              top: 16 + MediaQuery.of(context).padding.top,
-              right: 16,
-              child: IconButton.filled(
-                onPressed: _signOut,
-                icon: const Icon(Icons.logout),
-                tooltip: 'Sign out',
-              ),
+      body: Stack(
+        children: [
+          _buildContent(),
+          Positioned(
+            top: 16 + MediaQuery.of(context).padding.top,
+            right: 16,
+            child: IconButton.filled(
+              onPressed: _signOut,
+              icon: const Icon(Icons.logout),
+              tooltip: 'Sign out',
             ),
-          ],
-        ),
-        error: (error, _) => _buildErrorState(error),
-        loading: () => const Center(child: CircularProgressIndicator()),
+          ),
+        ],
       ),
     );
   }
@@ -241,24 +272,6 @@ class _EmailVerificationScreenState
                     ? 'Resend Verification Email'
                     : 'Wait ${_getTimeRemaining()} seconds...',
               ),
-              // FilledButton.icon(
-              //   onPressed: (_canResendEmail && !_isLoading)
-              //       ? _sendVerificationEmail
-              //       : null,
-              //   icon: _isLoading
-              //       ? const SizedBox(
-              //           width: 20,
-              //           height: 20,
-              //           child: CircularProgressIndicator(
-              //             strokeWidth: 2,
-              //             valueColor: AlwaysStoppedAnimation(Colors.white),
-              //           ),
-              //         )
-              //       : const Icon(Icons.send),
-              //   label: Text(_canResendEmail
-              //       ? 'Resend Verification Email'
-              //       : 'Wait ${_getTimeRemaining()} seconds...'),
-              // ),
               const SizedBox(height: 16),
               TextButton.icon(
                 onPressed: () => _handleVerificationCheck(),

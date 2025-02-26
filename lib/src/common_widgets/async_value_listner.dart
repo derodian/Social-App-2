@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_app_2/src/common_widgets/loading_overlay.dart';
+import 'package:social_app_2/src/features/auth/domain/app_user.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
+import 'package:social_app_2/src/features/auth/presentation/widgets/merge_account_dialog.dart';
 import 'package:social_app_2/src/features/services/snackbar_service.dart';
 
 enum ErrorDisplayType {
@@ -28,6 +31,7 @@ class AsyncValueListener<T> extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Handle Loading
     final showLoading = switch (value) {
       AsyncData(:final isRefreshing, :final isReloading) =>
         isRefreshing && !skipLoadingOnRefresh ||
@@ -69,4 +73,32 @@ class AsyncValueListener<T> extends ConsumerWidget {
       child: child,
     );
   }
+}
+
+// Helper extension for AuthResult checks
+extension AuthResultX on AsyncValue<AuthResult?> {
+  AppUser? get user {
+    if (!hasValue || value == null) return null;
+    return switch (value!) {
+      AuthUser(:final user) => user,
+      _ => null,
+    };
+  }
+
+  bool get hasMergeInfo {
+    return hasValue && value != null && value is MergeAccountInfo;
+  }
+
+  MergeAccountInfo? get mergeInfo {
+    if (!hasValue || value == null) return null;
+    return switch (value!) {
+      MergeAccountInfo info => info,
+      _ => null,
+    };
+  }
+
+  // Helper methods for common checks
+  bool get isAuthenticated => user != null;
+  bool get isVerified => user?.isEmailVerified ?? false;
+  bool get isApproved => user?.isApproved ?? false;
 }

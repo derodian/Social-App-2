@@ -4,15 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_app_2/src/common_widgets/async_value_listner.dart';
-import 'package:social_app_2/src/features/auth/data/app_user_storage_service.dart';
-import 'package:social_app_2/src/features/auth/data/apple_auth_service.dart';
-import 'package:social_app_2/src/features/auth/data/firebase_auth_service.dart';
-import 'package:social_app_2/src/features/auth/data/google_auth_service.dart';
 import 'package:social_app_2/src/features/auth/domain/app_user.dart';
 import 'package:social_app_2/src/features/auth/enum/auth_form_type.dart';
 import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_state_listner.dart';
 import 'package:social_app_2/src/features/auth/presentation/auth/email_password_form.dart';
-import 'package:social_app_2/src/features/auth/presentation/widgets/merge_account_dialog.dart';
 import 'package:social_app_2/src/features/auth/presentation/widgets/social_auth_button.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
@@ -72,44 +68,50 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final credential = await switch (provider) {
-        AppAuthProvider.google =>
-          ref.read(googleAuthServiceProvider).getCredential(),
-        AppAuthProvider.apple =>
-          ref.read(appleAuthServiceProvider).getCredential(),
-        _ => throw UnsupportedError('Provider not supported'),
-      };
-
-      final userInfo = await ref
-          .read(authServiceProvider)
-          .getUserInfoFromCredential(credential);
-
-      final exists = await ref
-          .read(appUserStorageServiceProvider.notifier)
-          .checkEmailExists(userInfo.email);
-
-      if (exists && mounted) {
-        final shouldMerge = await showDialog<bool>(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => MergeAccountDialog(
-                email: userInfo.email,
-                provider: provider,
-                onConfirm: () => Navigator.of(context).pop(true),
-                onCancel: () => Navigator.of(context).pop(false),
-              ),
-            ) ??
-            false;
-
-        if (!shouldMerge) {
-          setState(() => _isLoading = false);
-          return;
-        }
-      }
-
+      // Let AuthController handle everything
       await ref
           .read(authControllerProvider.notifier)
           .signInWithSocialProvider(provider);
+      // // Get user
+      // final resultUser = await ref
+      //     .read(authControllerProvider.notifier)
+      //     .signInWithSocialProvider(provider);
+
+      // // Check if email exists before signing in
+      // final email = switch (provider) {
+      //   AppAuthProvider.google => '', // Get email from Google credential
+      //   AppAuthProvider.apple => '', // Get email from Apple credential
+      //   _ => throw UnsupportedError('Provider not supported'),
+      // };
+
+      // // Check if email exists
+      // final exists = await ref
+      //     .read(appUserStorageServiceProvider.notifier)
+      //     .checkEmailExists(email);
+
+      // if (exists && mounted) {
+      //   final shouldMerge = await showDialog<bool>(
+      //         context: context,
+      //         barrierDismissible: false,
+      //         builder: (context) => MergeAccountDialog(
+      //           email: email,
+      //           provider: provider,
+      //           onConfirm: () => Navigator.of(context).pop(true),
+      //           onCancel: () => Navigator.of(context).pop(false),
+      //         ),
+      //       ) ??
+      //       false;
+
+      //   if (!shouldMerge) {
+      //     setState(() => _isLoading = false);
+      //     return;
+      //   }
+      // }
+
+      // // Complete sign in
+      // await ref
+      //     .read(authControllerProvider.notifier)
+      //     .completeSocialSignIn(provider);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -228,49 +230,54 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     final authState = ref.watch(authControllerProvider);
 
-    return AsyncValueListener<AppUser?>(
-      value: authState,
-      errorDisplayType: ErrorDisplayType.snackbar,
-      skipLoadingOnRefresh: true,
-      skipLoadingOnReload: true,
+    return AuthStateListner(
       onError: (error) {
-        debugPrint('Auth Error: $error');
+        debugPrint('AuthScreen: Auth Error: $error');
       },
-      child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                constraints: const BoxConstraints(maxWidth: 500),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Logo section
-                    _buildLogoSection(theme),
+      child: AsyncValueListener<AuthResult?>(
+        value: authState,
+        errorDisplayType: ErrorDisplayType.snackbar,
+        skipLoadingOnRefresh: true,
+        skipLoadingOnReload: true,
+        onError: (error) {
+          debugPrint('Auth Error: $error');
+        },
+        child: Scaffold(
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Logo section
+                      _buildLogoSection(theme),
 
-                    // Title section
-                    _buildTitleSection(theme),
+                      // Title section
+                      _buildTitleSection(theme),
 
-                    // Social auth section
-                    if (!_formType.isForgotPassword) ...[
-                      _buildSocialAuthSection(
-                        isSmallScreen: isSmallScreen,
+                      // Social auth section
+                      if (!_formType.isForgotPassword) ...[
+                        _buildSocialAuthSection(
+                          isSmallScreen: isSmallScreen,
+                          isLoading: authState.isLoading,
+                        ),
+                        const _OrDivider(),
+                      ],
+
+                      // Email form section
+                      _buildEmailFormSection(authState.isLoading),
+
+                      // Action buttons section
+                      _buildActionButtons(
+                        theme: theme,
                         isLoading: authState.isLoading,
                       ),
-                      const _OrDivider(),
                     ],
-
-                    // Email form section
-                    _buildEmailFormSection(authState.isLoading),
-
-                    // Action buttons section
-                    _buildActionButtons(
-                      theme: theme,
-                      isLoading: authState.isLoading,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

@@ -343,8 +343,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_app_2/src/features/auth/domain/app_user.dart';
 import 'package:social_app_2/src/features/auth/presentation/account/profile_screen.dart';
 import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
-import 'package:social_app_2/src/features/components/admin_only/admin_only_widget.dart';
-import 'package:social_app_2/src/routing/app_router.dart';
 import 'package:social_app_2/src/theme/theme_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -353,7 +351,7 @@ class MainDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authControllerProvider).value;
+    final user = ref.watch(currentUserProvider);
     final theme = Theme.of(context);
 
     if (user == null) {

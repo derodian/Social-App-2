@@ -656,8 +656,43 @@ class AppUserStorageService extends _$AppUserStorageService {
     // }
   }
 
+  // // Method to handle user creation or update from social auth
+  // Future<AppUser> createOrUpdateSocialUser(AppUser user) async {
+  //   return _runTransactionSafely((transaction) async {
+  //     final userDoc = _usersCollection.doc(user.id);
+  //     final snapshot = await transaction.get(userDoc);
+
+  //     if (snapshot.exists) {
+  //       // User exists, update last login and merge any new data
+  //       final existingUser = snapshot.toAppUser();
+  //       if (existingUser == null) throw Exception('Invalid user data');
+
+  //       final updatedUser = existingUser.copyWith(
+  //         lastLoginDate: DateTime.now(),
+  //         lastUpdateDate: DateTime.now(),
+  //         // Update these fields only if they're empty in existing user
+  //         displayName: existingUser.displayName.isEmpty
+  //             ? user.displayName
+  //             : existingUser.displayName,
+  //         profileImageURL: existingUser.profileImageURL ?? user.profileImageURL,
+  //         phoneNumber: existingUser.phoneNumber ?? user.phoneNumber,
+  //         // Always update these fields
+  //         isEmailVerified: true, // Social auth emails are typically verified
+  //         providerData: user.providerData,
+  //       );
+
+  //       transaction.update(userDoc, updatedUser.toFirestore());
+  //       return updatedUser;
+  //     } else {
+  //       // New user, create with social auth data
+  //       transaction.set(userDoc, user.toFirestore());
+  //       return user;
+  //     }
+  //   });
+  // }
   // Method to handle user creation or update from social auth
-  Future<AppUser> createOrUpdateSocialUser(AppUser user) async {
+  Future<AppUser> createOrUpdateSocialUser(
+      AppUser user, AppAuthProvider provider) async {
     return _runTransactionSafely((transaction) async {
       final userDoc = _usersCollection.doc(user.id);
       final snapshot = await transaction.get(userDoc);
@@ -678,6 +713,7 @@ class AppUserStorageService extends _$AppUserStorageService {
           phoneNumber: existingUser.phoneNumber ?? user.phoneNumber,
           // Always update these fields
           isEmailVerified: true, // Social auth emails are typically verified
+          // TODO: Add new provider passed to providerData
           providerData: user.providerData,
         );
 
@@ -821,43 +857,92 @@ class AppUserStorageService extends _$AppUserStorageService {
   }
 
   // Method to merge accounts if needed
-  Future<void> mergeAccounts(
-      String primaryUserId, String secondaryUserId) async {
-    return _runTransactionSafely((transaction) async {
-      final primaryDoc = _usersCollection.doc(primaryUserId);
-      final secondaryDoc = _usersCollection.doc(secondaryUserId);
+  // Future<void> mergeAccounts(
+  //     String primaryUserId, String secondaryUserId) async {
+  //   return _runTransactionSafely((transaction) async {
+  //     final primaryDoc = _usersCollection.doc(primaryUserId);
+  //     final secondaryDoc = _usersCollection.doc(secondaryUserId);
 
-      final primarySnapshot = await transaction.get(primaryDoc);
-      final secondarySnapshot = await transaction.get(secondaryDoc);
+  //     final primarySnapshot = await transaction.get(primaryDoc);
+  //     final secondarySnapshot = await transaction.get(secondaryDoc);
 
-      if (!primarySnapshot.exists || !secondarySnapshot.exists) {
-        throw Exception('One or both users do not exist');
-      }
+  //     if (!primarySnapshot.exists || !secondarySnapshot.exists) {
+  //       throw Exception('One or both users do not exist');
+  //     }
 
-      final primaryUser = primarySnapshot.toAppUser();
-      final secondaryUser = secondarySnapshot.toAppUser();
+  //     final primaryUser = primarySnapshot.toAppUser();
+  //     final secondaryUser = secondarySnapshot.toAppUser();
 
-      if (primaryUser == null || secondaryUser == null) {
-        throw Exception('Invalid user data');
-      }
+  //     if (primaryUser == null || secondaryUser == null) {
+  //       throw Exception('Invalid user data');
+  //     }
 
-      // Merge user data
-      final mergedProviders = <String>{
-        ...List<String>.from(primaryUser.linkedProviders ?? []),
-        ...List<String>.from(secondaryUser.linkedProviders ?? []),
-      }.toList(); // Convert to Set and back to List to remove duplicates
+  //     // Merge user data
+  //     final mergedProviders = <String>{
+  //       ...List<String>.from(primaryUser.linkedProviders ?? []),
+  //       ...List<String>.from(secondaryUser.linkedProviders ?? []),
+  //     }.toList(); // Convert to Set and back to List to remove duplicates
 
-      final mergedUser = primaryUser.copyWith(
-        linkedProviders: mergedProviders,
-        lastUpdateDate: DateTime.now(),
-      );
+  //     final mergedUser = primaryUser.copyWith(
+  //       linkedProviders: mergedProviders,
+  //       lastUpdateDate: DateTime.now(),
+  //     );
 
-      // Update primary user with merged data
-      transaction.update(primaryDoc, mergedUser.toFirestore());
+  //     // Update primary user with merged data
+  //     transaction.update(primaryDoc, mergedUser.toFirestore());
 
-      // Delete secondary user
-      transaction.delete(secondaryDoc);
-    });
+  //     // Delete secondary user
+  //     transaction.delete(secondaryDoc);
+  //   });
+  // }
+
+  Future<AppUser> mergeAccounts(
+      AppUser newUser, AppAuthProvider newProvider) async {
+    // Get existing user doc with same email
+    final query = await _usersCollection
+        .where(FirestoreFieldName.email, isEqualTo: newUser.email)
+        .limit(1)
+        .get();
+
+    if (query.docs.isEmpty) {
+      throw Exception('No existing account found to merge');
+    }
+
+    final existingDoc = query.docs.first;
+    final existingUser = existingDoc.toAppUser();
+
+    if (existingUser == null) {
+      throw Exception('Invalid existing user data');
+    }
+
+    // Merge user data
+    final mergedProviders = <String>{
+      ...existingUser.linkedProviders,
+      newProvider.name,
+    }.toList();
+
+    // Update user data
+    final mergedUser = existingUser.copyWith(
+      linkedProviders: mergedProviders,
+      providerData: [
+        ...(existingUser.providerData ?? []),
+        ...?newUser.providerData
+      ],
+      lastUpdateDate: DateTime.now(),
+      // Keep existing data if present, otherwise use new user's data
+      displayName: existingUser.displayName.isEmpty
+          ? newUser.displayName
+          : existingUser.displayName,
+      profileImageURL: existingUser.profileImageURL ?? newUser.profileImageURL,
+      phoneNumber: existingUser.phoneNumber ?? newUser.phoneNumber,
+    );
+
+    // Update in Firestore
+    await _usersCollection
+        .doc(existingUser.id)
+        .update(mergedUser.toFirestore());
+
+    return mergedUser;
   }
 
   Future<void> updateUser(AppUser user) async {

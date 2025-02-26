@@ -35,7 +35,10 @@ class FirestoreFieldName {
   static const String privacySettings = 'privacy_settings';
 
   // Preferences fields
+  static const String systemMode = 'system_mode';
   static const String darkMode = 'dark_mode';
+  static const String lightMode = 'light_mode';
+  static const String themeMode = 'theme_mode';
   static const String language = 'language';
 
   // Notification settings fields

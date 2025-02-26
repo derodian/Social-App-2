@@ -5,8 +5,8 @@ import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/exceptions/firestore_exception.dart';
 import 'package:social_app_2/src/features/auth/constants/app_user_constants.dart';
 import 'package:social_app_2/src/features/auth/domain/provider_data.dart';
-import 'package:social_app_2/src/features/auth/domain/user_cache_manager.dart';
 import 'package:social_app_2/src/features/auth/typedefs/user_id.dart';
+import 'package:social_app_2/src/features/settings/domain/user_preferences.dart';
 
 part 'app_user.freezed.dart';
 part 'app_user.g.dart';
@@ -43,17 +43,6 @@ enum AccountStatus {
 // Create an interface for Firestore operations
 abstract class FirestoreDoc {
   Map<String, dynamic> toFirestore();
-}
-
-@freezed
-class UserPreferences with _$UserPreferences {
-  const factory UserPreferences({
-    @JsonKey(name: FirestoreFieldName.darkMode) @Default(true) bool darkMode,
-    @JsonKey(name: FirestoreFieldName.language) @Default('en') String language,
-  }) = _UserPreferences;
-
-  factory UserPreferences.fromJson(Map<String, dynamic> json) =>
-      _$UserPreferencesFromJson(json);
 }
 
 @freezed
@@ -96,7 +85,7 @@ class PrivacySettings with _$PrivacySettings {
 class AppUser with _$AppUser implements FirestoreDoc {
   const AppUser._();
 
-  static final _cacheManager = UserCacheManager();
+  // static final _cacheManager = UserCacheManager();
 
   // Cache for both JSON and Firestore data
   static final Map<String, Map<String, dynamic>> _firestoreCache = {};

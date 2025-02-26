@@ -136,7 +136,7 @@ class ProfileController extends _$ProfileController {
   @override
   FutureOr<AppUser?> build() {
     // Watch the auth state to keep profile in sync
-    return ref.watch(authControllerProvider).valueOrNull;
+    return ref.watch(currentUserProvider);
   }
 
   Future<void> updateProfile({
@@ -150,6 +150,10 @@ class ProfileController extends _$ProfileController {
     String? country,
     File? profileImage,
     File? backgroundImage,
+    required PrivacySettings privacySettings,
+    required NotificationSettings notificationSettings,
+    required bool isInfoShared,
+    required bool isChatEnabled,
   }) async {
     state = const AsyncValue.loading();
 
@@ -220,6 +224,10 @@ class ProfileController extends _$ProfileController {
         profileImageURL: profileImageURL ?? currentUser.profileImageURL,
         profileBannerImageURL:
             profileBannerImageURL ?? currentUser.profileBannerImageURL,
+        privacySettings: privacySettings,
+        notificationSettings: notificationSettings,
+        isInfoShared: isInfoShared,
+        isChatEnabled: isChatEnabled,
         lastUpdateDate: DateTime.now(),
       );
 

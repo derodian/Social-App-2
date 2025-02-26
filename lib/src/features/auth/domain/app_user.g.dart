@@ -6,20 +6,6 @@ part of 'app_user.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UserPreferencesImpl _$$UserPreferencesImplFromJson(
-        Map<String, dynamic> json) =>
-    _$UserPreferencesImpl(
-      darkMode: json['dark_mode'] as bool? ?? true,
-      language: json['language'] as String? ?? 'en',
-    );
-
-Map<String, dynamic> _$$UserPreferencesImplToJson(
-        _$UserPreferencesImpl instance) =>
-    <String, dynamic>{
-      'dark_mode': instance.darkMode,
-      'language': instance.language,
-    };
-
 _$NotificationSettingsImpl _$$NotificationSettingsImplFromJson(
         Map<String, dynamic> json) =>
     _$NotificationSettingsImpl(

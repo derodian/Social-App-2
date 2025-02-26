@@ -7,7 +7,7 @@ part of 'waiting_for_approval_screen_controller.dart';
 // **************************************************************************
 
 String _$waitingApprovalScreenControllerHash() =>
-    r'4135a97edb9dfd0ab8f438f4129864e0380f18a2';
+    r'972d0112a48e1bc94268cfb35eb03e2c8ffeda35';
 
 /// See also [WaitingApprovalScreenController].
 @ProviderFor(WaitingApprovalScreenController)

@@ -270,7 +270,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final user = ref.watch(authControllerProvider).value;
+    final user = ref.watch(currentUserProvider);
 
     return AppBar(
       backgroundColor: isTransparent

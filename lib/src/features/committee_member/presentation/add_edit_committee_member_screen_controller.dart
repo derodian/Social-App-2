@@ -46,7 +46,7 @@ class AddEditCommitteeMemberScreenController
   }) async {
     final committeeMemberRepository =
         ref.watch(committeeMemberRepositoryProvider);
-    final user = ref.read(authControllerProvider).value;
+    final user = ref.read(authControllerProvider.notifier).currentUser;
     final userId = user?.id;
     try {
       state = const AsyncLoading();

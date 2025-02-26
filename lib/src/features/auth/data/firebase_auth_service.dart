@@ -11,6 +11,7 @@ import 'package:social_app_2/src/features/auth/data/auth_service.dart';
 import 'package:social_app_2/src/features/auth/data/google_auth_service.dart';
 import 'package:social_app_2/src/features/auth/domain/app_user.dart';
 import 'package:social_app_2/src/features/auth/domain/provider_data.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 
 part 'firebase_auth_service.g.dart';
 
@@ -379,6 +380,53 @@ class FirebaseAuthService implements AuthService {
 
   // Add social sign-in methods
   @override
+  Future<AuthCredential> getProviderCredential(AppAuthProvider provider) async {
+    switch (provider) {
+      case AppAuthProvider.google:
+        return await _googleAuth.getCredential();
+      case AppAuthProvider.apple:
+        return await _appleAuth.getCredential();
+      case AppAuthProvider.facebook:
+        // TODO: Handle this case.
+        throw UnimplementedError('Provider not supported');
+      case AppAuthProvider.github:
+        // TODO: Handle this case.
+        throw UnimplementedError('Provider not supported');
+      default:
+        throw UnimplementedError('Provider not supported');
+    }
+  }
+
+  @override
+  Future<User?> signInWithCredential(AuthCredential credential) async {
+    try {
+      final userCredential = await _auth.signInWithCredential(credential);
+      return userCredential.user;
+    } catch (e) {
+      throw Exception('Failed to sign in with credential: $e');
+    }
+  }
+
+  @override
+  Future<AppUser> signInWithProvider(
+      AppAuthProvider provider, AuthCredential credential) async {
+    try {
+      final userCredential = await _auth.signInWithCredential(credential);
+      if (userCredential.user == null) {
+        throw Exception('No user found after ${provider.name} sign in');
+      }
+
+      return _handleSocialSignIn(
+        userCredential: userCredential,
+        provider: provider,
+        credential: credential,
+      );
+    } catch (e) {
+      throw Exception('Failed to sign in with ${provider.name}: $e');
+    }
+  }
+
+  @override
   Future<AppUser> signInWithGoogle() async {
     try {
       final credential = await _googleAuth.getCredential();
@@ -485,7 +533,7 @@ class FirebaseAuthService implements AuthService {
         providerData: [providerData],
       );
 
-      await _userStorage.createOrUpdateSocialUser(newUser);
+      await _userStorage.createOrUpdateSocialUser(newUser, provider);
       return newUser;
     }
 
@@ -516,36 +564,36 @@ class FirebaseAuthService implements AuthService {
     };
   }
 
-  @override
-  Future<AppUser> getUserInfoFromCredential(OAuthCredential credential) async {
-    try {
-      final userCred = await _auth.signInWithCredential(credential);
-      if (userCred.user == null) throw Exception('No user data found');
+  // @override
+  // Future<AppUser> getUserInfoFromCredential(OAuthCredential credential) async {
+  //   try {
+  //     final userCred = await _auth.signInWithCredential(credential);
+  //     if (userCred.user == null) throw Exception('No user data found');
 
-      // Create ProviderData
-      final providerData = _createProviderData(
-        firebaseUser: userCred.user!,
-        credential: credential,
-        additionalData: userCred.additionalUserInfo?.profile,
-      );
+  //     // Create ProviderData
+  //     final providerData = _createProviderData(
+  //       firebaseUser: userCred.user!,
+  //       credential: credential,
+  //       additionalData: userCred.additionalUserInfo?.profile,
+  //     );
 
-      return AppUser.fromSocialAuth(
-        id: userCred.user!.uid,
-        email: userCred.user!.email ?? '',
-        displayName: userCred.user!.displayName ??
-            userCred.user!.email?.split('@')[0] ??
-            '',
-        provider: _getProviderFromCredential(credential),
-        phoneNumber: userCred.user!.phoneNumber,
-        profileImageURL: userCred.user!.photoURL,
-        providerData: [providerData],
-      );
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    } catch (e) {
-      throw Exception('Failed to sign in with Apple: ${e.toString()}');
-    }
-  }
+  //     return AppUser.fromSocialAuth(
+  //       id: userCred.user!.uid,
+  //       email: userCred.user!.email ?? '',
+  //       displayName: userCred.user!.displayName ??
+  //           userCred.user!.email?.split('@')[0] ??
+  //           '',
+  //       provider: _getProviderFromCredential(credential),
+  //       phoneNumber: userCred.user!.phoneNumber,
+  //       profileImageURL: userCred.user!.photoURL,
+  //       providerData: [providerData],
+  //     );
+  //   } on FirebaseAuthException catch (e) {
+  //     throw _handleAuthException(e);
+  //   } catch (e) {
+  //     throw Exception('Failed to sign in with Apple: ${e.toString()}');
+  //   }
+  // }
 
   @override
   Future<AppUser> linkProvider(AppAuthProvider provider) async {

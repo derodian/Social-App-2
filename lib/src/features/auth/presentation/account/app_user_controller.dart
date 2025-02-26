@@ -13,6 +13,8 @@ part 'app_user_controller.g.dart';
 class AppUserController extends _$AppUserController {
   AppUserStorageService get _service =>
       ref.watch(appUserStorageServiceProvider);
+  AuthController get authController =>
+      ref.read(authControllerProvider.notifier);
 
   @override
   FutureOr<List<AppUser>> build() {
@@ -25,9 +27,7 @@ class AppUserController extends _$AppUserController {
   bool _hasMore = true;
 
   bool get hasMore => _hasMore;
-
-  bool get isAdmin =>
-      ref.read(authControllerProvider).valueOrNull?.isAdmin ?? false;
+  bool get isAdmin => authController.currentUser?.isAdmin ?? false;
 
   Future<void> loadNextPage({AppUserFilter? filter}) async {
     if (!_hasMore) return;
@@ -125,6 +125,6 @@ class AppUserController extends _$AppUserController {
 
 @riverpod
 bool isUserAdmin(Ref ref) {
-  final authState = ref.watch(authControllerProvider);
-  return authState.valueOrNull?.isAdmin ?? false;
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.currentUser?.isAdmin ?? false;
 }

@@ -136,7 +136,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       }
 
       // Get current user and their auth provider
-      final user = ref.read(authControllerProvider).value;
+      final user = ref.read(authControllerProvider.notifier).currentUser;
       if (user == null) {
         debugPrint('No user found');
         return;
@@ -156,6 +156,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           email: user.email,
           onSubmit: (password) => _handlePasswordSubmission(password),
         );
+      } else {
+        reauthed = await _showProviderReauthenticationDialog(user.provider);
       }
 
       debugPrint('Reauthentication result: $reauthed');
@@ -306,7 +308,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       final result = await ref
           .read(authControllerProvider.notifier)
           .reauthenticateWithPassword(
-            email: ref.read(authControllerProvider).value!.email,
+            email: ref.read(authControllerProvider.notifier).currentUser!.email,
             password: password,
           );
       debugPrint('Password authentication successful');
@@ -348,7 +350,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   Future<bool> _showProviderReauthenticationDialog(
       AppAuthProvider provider) async {
     debugPrint('Starting reauthentication dialog');
-    bool isAuthenticated = false;
+    bool _isAuthenticated = false;
     final completer = Completer<bool>();
 
     // Prevent router from redirecting during reauthentication
@@ -384,7 +386,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                           .reauthenticateWithProvider(provider);
 
                       debugPrint('Reauthentication successful');
-                      isAuthenticated = true;
+                      _isAuthenticated = true;
 
                       debugPrint(
                           'Checking dialog context mounted: ${dialogContext.mounted}');
@@ -718,7 +720,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             ),
             _buildStatusRow(
               'Admin Approved',
-              user.isAdmin,
+              user.isApproved,
             ),
             if (user.isAdmin)
               _buildStatusRow(

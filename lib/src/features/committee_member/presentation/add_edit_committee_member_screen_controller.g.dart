@@ -7,7 +7,7 @@ part of 'add_edit_committee_member_screen_controller.dart';
 // **************************************************************************
 
 String _$addEditCommitteeMemberScreenControllerHash() =>
-    r'ca685428ae6f11caae08797770c90629dc739294';
+    r'33f78a0e9afafa24977f2c5da9b7c336a34c1730';
 
 /// See also [AddEditCommitteeMemberScreenController].
 @ProviderFor(AddEditCommitteeMemberScreenController)

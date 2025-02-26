@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_app_2/src/features/auth/domain/app_user.dart';
+import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 
 abstract class AuthService {
   // Current user getters
@@ -46,9 +47,13 @@ abstract class AuthService {
   Future<AppUser> signInWithApple();
   // Future<AppUser> signInWithFacebook();
   // Future<AppUser> signInWithGithub();
+  Future<AuthCredential> getProviderCredential(AppAuthProvider provider);
+  Future<User?> signInWithCredential(AuthCredential credential);
+  Future<AppUser> signInWithProvider(
+      AppAuthProvider provider, AuthCredential credential);
 
   Future<List<AppAuthProvider>> checkEmailProviders(String email);
-  Future<AppUser> getUserInfoFromCredential(OAuthCredential credential);
+  // Future<AppUser> getUserInfoFromCredential(OAuthCredential credential);
 
   // Delete account
   Future<void> deleteAccount();

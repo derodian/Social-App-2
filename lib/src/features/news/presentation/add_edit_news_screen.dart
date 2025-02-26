@@ -71,7 +71,7 @@ class _AddEditNewsScreenState extends ConsumerState<AddEditNewsScreen> {
 
   Future<void> _loadExistingNewsData() async {
     final newsValue = await ref.read(newsFutureProvider(widget.newsId!).future);
-    final currentUser = ref.read(authControllerProvider).value;
+    final currentUser = ref.read(authControllerProvider.notifier).currentUser;
     if (newsValue != null) {
       setState(() {
         _titleController.text = newsValue.title;

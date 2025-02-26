@@ -105,7 +105,7 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
   Future<void> _loadExistingEventData() async {
     final eventValue =
         await ref.read(eventFutureProvider(widget.eventId!).future);
-    final currentUser = ref.read(authControllerProvider).value;
+    final currentUser = ref.read(authControllerProvider.notifier).currentUser;
     if (eventValue != null) {
       setState(() {
         _titleController.text = eventValue.title;
@@ -147,7 +147,7 @@ class _AddEditEventScreenState extends ConsumerState<AddEditEventScreen> {
   }
 
   Future<void> _submit() async {
-    final currentUser = ref.read(authControllerProvider).value;
+    final currentUser = ref.read(authControllerProvider.notifier).currentUser;
     if (_formKey.currentState!.validate()) {
       final event = Event(
         id: widget.eventId ?? DateTime.now().toIso8601String(),

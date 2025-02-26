@@ -6,7 +6,7 @@ part of 'app_user_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$isUserAdminHash() => r'4b3bf9eab71d043dac266ae2b14efa48024a821c';
+String _$isUserAdminHash() => r'de4457ae38154384453547c0911feaa2917025bc';
 
 /// See also [isUserAdmin].
 @ProviderFor(isUserAdmin)
@@ -22,7 +22,7 @@ final isUserAdminProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef IsUserAdminRef = AutoDisposeProviderRef<bool>;
-String _$appUserControllerHash() => r'b51e5b6444d1c4621483362f07dab251ac4b8d49';
+String _$appUserControllerHash() => r'9609722165aea1642dca63b63c2c12c3b64db604';
 
 /// See also [AppUserController].
 @ProviderFor(AppUserController)

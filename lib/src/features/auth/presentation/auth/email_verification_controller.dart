@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:social_app_2/src/features/auth/data/firebase_auth_service.dart';
 import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 import 'package:social_app_2/src/routing/app_router.dart';
 
@@ -10,11 +9,21 @@ part 'email_verification_controller.g.dart';
 @riverpod
 class EmailVerificationController extends _$EmailVerificationController {
   Timer? _timer;
+  bool _disposed = false;
   StreamSubscription<bool>? _verificationSubscription;
+
+  // Cancel Timer
+  void _cleanupTimer() {
+    _timer?.cancel();
+    _timer = null;
+  }
 
   @override
   bool build() {
+    // Setup cleanup
     ref.onDispose(() {
+      _cleanupTimer();
+      _disposed = true;
       _verificationSubscription?.cancel();
       debugPrint('EmailVerificationController disposed');
     });
@@ -23,31 +32,53 @@ class EmailVerificationController extends _$EmailVerificationController {
     _listenToVerificationStatus();
 
     // Return current verification status
-    return ref.read(authControllerProvider).value?.isEmailVerified ?? false;
+    final authController = ref.read(authControllerProvider.notifier);
+    return authController.currentUser?.isEmailVerified ?? false;
   }
 
+  // Listen to verification changes
   void _listenToVerificationStatus() {
-    _verificationSubscription?.cancel();
-    final authService = ref.read(authServiceProvider);
+    // _verificationSubscription?.cancel();
+    // final authService = ref.read(authServiceProvider);
 
-    _verificationSubscription =
-        authService.isEmailVerified.distinct().listen((isVerified) {
-      debugPrint('Email verification status changed: $isVerified');
+    // _verificationSubscription =
+    //     authService.isEmailVerified.distinct().listen((isVerified) {
+    //   debugPrint('Email verification status changed: $isVerified');
 
-      if (isVerified && !state) {
-        // Update controller state
-        state = true;
+    //   if (isVerified && !state) {
+    //     // Update controller state
+    //     state = true;
 
-        // Navigate after a brief delay to allow UI to update
-        Future.delayed(const Duration(milliseconds: 500), () {
-          ref.read(routerControllerProvider.notifier).goToWaitingApproval();
-        });
-      }
+    //     // Navigate after a brief delay to allow UI to update
+    //     Future.delayed(const Duration(milliseconds: 500), () {
+    //       ref.read(routerControllerProvider.notifier).goToWaitingApproval();
+    //     });
+    //   }
+    // });
+
+    // Listen to auth state changes
+    ref.listen<AsyncValue<AuthResult?>>(authControllerProvider,
+        (previous, next) {
+      if (_disposed) return;
+
+      next.whenData((result) {
+        if (result case AuthUser(:final user)) {
+          if (user.isEmailVerified && !state) {
+            state = true;
+            _timer?.cancel();
+
+            // Navigate after brief delay
+            Future.delayed(const Duration(milliseconds: 500), () {
+              ref.read(routerControllerProvider.notifier).goToWaitingApproval();
+            });
+          }
+        }
+      });
     });
   }
 
   Future<void> startVerificationCheck() async {
-    _timer?.cancel();
+    _cleanupTimer();
     _timer = Timer.periodic(
       const Duration(seconds: 5),
       (_) => checkVerification(showError: false),
@@ -55,22 +86,24 @@ class EmailVerificationController extends _$EmailVerificationController {
   }
 
   Future<void> checkVerification({bool showError = false}) async {
+    if (_disposed) return;
+
     try {
       debugPrint('Checking email verification');
 
       // Force fresh Firestore read
       await ref.read(authControllerProvider.notifier).reload();
 
-      final user = ref.read(authControllerProvider).value;
-      if (user == null) return;
+      // final user = ref.read(authControllerProvider.notifier).currentUser;
+      // if (user == null) return;
 
-      if (user.isEmailVerified) {
-        state = true;
-        _timer?.cancel();
-        await Future.delayed(
-            const Duration(milliseconds: 500)); // Allow UI update
-        ref.read(routerControllerProvider.notifier).goToWaitingApproval();
-      }
+      // if (user.isEmailVerified) {
+      //   state = true;
+      //   _timer?.cancel();
+      //   await Future.delayed(
+      //       const Duration(milliseconds: 500)); // Allow UI update
+      //   ref.read(routerControllerProvider.notifier).goToWaitingApproval();
+      // }
     } catch (e) {
       if (showError) {
         rethrow;
@@ -79,6 +112,8 @@ class EmailVerificationController extends _$EmailVerificationController {
   }
 
   Future<void> sendVerificationEmail() async {
+    if (_disposed) return;
+
     try {
       await ref.read(authControllerProvider.notifier).sendEmailVerification();
       startVerificationCheck(); // Start checking for verification

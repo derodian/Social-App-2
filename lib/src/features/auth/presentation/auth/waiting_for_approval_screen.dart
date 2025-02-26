@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_app_2/src/common_widgets/custom_primary_button.dart';
-import 'package:social_app_2/src/common_widgets/primary_button.dart';
-import 'package:social_app_2/src/features/auth/domain/app_user.dart';
-import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 import 'package:social_app_2/src/features/auth/presentation/auth/waiting_for_approval_screen_controller.dart';
 import 'package:social_app_2/src/features/auth/presentation/widgets/support_dialog.dart';
 import 'package:social_app_2/src/features/components/animations/waiting_approval_animation_view.dart';
-import 'package:social_app_2/src/routing/app_router.dart';
 import 'package:social_app_2/src/utils/url_launcher_utils.dart';
 
 class WaitingApprovalScreen extends ConsumerStatefulWidget {
@@ -22,12 +18,21 @@ class _WaitingApprovalScreenState extends ConsumerState<WaitingApprovalScreen> {
   @override
   void initState() {
     super.initState();
-    Future(() => ref
-        .read(waitingApprovalScreenControllerProvider.notifier)
-        .startPeriodicRefresh());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref
+            .read(waitingApprovalScreenControllerProvider.notifier)
+            .startPeriodicRefresh();
+      }
+    });
+    // Future(() => ref
+    //     .read(waitingApprovalScreenControllerProvider.notifier)
+    //     .startPeriodicRefresh());
   }
 
   void _showSupportDialog() {
+    if (!mounted) return;
+
     final controller =
         ref.read(waitingApprovalScreenControllerProvider.notifier);
     showDialog(
@@ -40,19 +45,39 @@ class _WaitingApprovalScreenState extends ConsumerState<WaitingApprovalScreen> {
     );
   }
 
+  Future<void> _handleSignOut() async {
+    try {} catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error signing out: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Listen for approval
-    ref.listen<AsyncValue<AppUser?>>(
-      authControllerProvider,
-      (_, next) {
-        next.whenData((user) {
-          if (user?.isAdmin ?? false) {
-            ref.read(routerControllerProvider.notifier).goToHome();
-          }
-        });
-      },
-    );
+    // // Listen for approval
+    // ref.listen<AsyncValue<AuthResult?>>(
+    //   authControllerProvider,
+    //   (_, next) {
+    //     next.whenData((result) {
+    //       // if (user?.isAdmin ?? false) {
+    //       //   ref.read(routerControllerProvider.notifier).goToHome();
+    //       // }
+    //       if (result case AuthUser(:final user)) {
+    //         if (user.isAdmin) {
+    //           ref.read(routerControllerProvider.notifier).goToHome();
+    //         } else if (!user.isEmailVerified) {
+    //           ref
+    //               .read(routerControllerProvider.notifier)
+    //               .goToEmailVerification();
+    //         } else if (!user.isApproved) {
+    //           ref.read(routerControllerProvider.notifier).goToWaitingApproval();
+    //         }
+    //       }
+    //     });
+    //   },
+    // );
 
     return Scaffold(
       body: Stack(
@@ -62,9 +87,7 @@ class _WaitingApprovalScreenState extends ConsumerState<WaitingApprovalScreen> {
             top: 16 + MediaQuery.of(context).padding.top,
             right: 16,
             child: IconButton.filled(
-              onPressed: () => ref
-                  .read(waitingApprovalScreenControllerProvider.notifier)
-                  .signOut(),
+              onPressed: _handleSignOut,
               icon: const Icon(Icons.logout),
               tooltip: 'Sign out',
             ),
@@ -194,10 +217,6 @@ class _WaitingApprovalScreenState extends ConsumerState<WaitingApprovalScreen> {
               ),
               const SizedBox(height: 24),
               TextButton.icon(
-                // onPressed: () => showDialog(
-                //   context: context,
-                //   builder: (_) => const SupportDialog(),
-                // ),
                 onPressed: _showSupportDialog,
                 icon: const Icon(Icons.contact_support),
                 label: const Text('Contact Support'),

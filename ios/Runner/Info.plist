@@ -45,5 +45,42 @@
     <true/>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
+    <key>GIDClientID</key>
+    <!-- TODO Replace this value: -->
+    <!-- Copied from GoogleService-Info.plist key CLIENT_ID -->
+      <string>490911373311-1e02l3ilkpkjuf2fsstbgiaao7i4oo06.apps.googleusercontent.com</string>
+    <!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
+    <!-- Google Sign-in Section -->
+    <key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+        <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<!-- Add your REVERSED_CLIENT_ID here -->
+					<string>com.googleusercontent.apps.490911373311-1e02l3ilkpkjuf2fsstbgiaao7i4oo06</string>
+				</array>
+			</dict>
+		</array>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>tel</string>
+			<string>sms</string>
+			<string>mailto</string>
+			<string>https</string>
+			<string>http</string>
+			<string>maps</string>
+		</array>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>$(BUNDLE_DISPLAY_NAME) needs access to location to show distances to addresses.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>$(BUNDLE_DISPLAY_NAME) needs access to location to show distances to addresses.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>$(BUNDLE_DISPLAY_NAME) needs access to your photo library to update your profile picture and cover photo, and share photos to community.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>$(BUNDLE_DISPLAY_NAME) needs access to your camera to take profile pictures and cover photos.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>$(BUNDLE_DISPLAY_NAME) does not require access to the microphone.</string>
   </dict>
 </plist>

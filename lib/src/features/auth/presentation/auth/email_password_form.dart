@@ -3,10 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app_2/src/common_widgets/custom_text_form_field.dart';
 import 'package:social_app_2/src/common_widgets/primary_button.dart';
+import 'package:social_app_2/src/features/auth/data/auth_validation_service.dart';
 import 'package:social_app_2/src/features/auth/domain/app_user.dart';
 import 'package:social_app_2/src/features/auth/enum/auth_form_type.dart';
-import 'package:social_app_2/src/features/auth/presentation/auth/auth_controller.dart';
 import 'package:social_app_2/src/features/auth/presentation/widgets/password_requirement.dart';
+import 'package:social_app_2/src/features/auth/presentation/widgets/provider_selection_bottom_sheet.dart';
 import 'package:social_app_2/src/features/auth/utils/provider_utils.dart';
 import 'package:social_app_2/src/utils/formatters.dart';
 import 'package:social_app_2/src/utils/validators.dart';
@@ -84,49 +85,57 @@ class _EmailPasswordFormState extends ConsumerState<EmailPasswordForm> {
       } catch (e) {
         debugPrint('Submit error: $e');
         // Don't proceed with submission if validation fails
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
       }
     }
   }
 
-  Future<void> _validateEmail(String email) async {
-    if (_isSignUp) {
-      debugPrint('Validating email: $email');
-      final authController = ref.read(authControllerProvider.notifier);
-      try {
-        final providers = await authController.checkEmailProviders(email);
-        debugPrint('Found providers: $providers');
+  Future<bool> _validateEmail(String email) async {
+    if (!_isSignUp) return true;
 
-        if (providers.isNotEmpty && mounted) {
-          // Add logging before showing dialog
-          debugPrint('Showing provider selection dialog');
-          return await showDialog(
-            barrierDismissible: false, // Prevent dismissing by tapping outside
-            context: context,
-            builder: (context) => ProviderSelectionDialog(
-              providers: providers,
-              onProviderSelected: _handleExistingProvider,
-            ),
-          );
-        }
-      } catch (e) {
-        debugPrint('Error validating email: $e');
-        rethrow;
-      }
-    }
+    debugPrint('Validating email: $email');
+    final validationService = ref.read(authValidationServiceProvider.notifier);
+    final result = await validationService.validateEmailForSignUp(email);
+
+    return switch (result) {
+      ValidEmail() => true,
+      ExistingProviders(:final providers) =>
+        await _handleExistingProviders(providers),
+      ValidationError(:final message) => throw Exception(message),
+    };
   }
 
-  void _handleExistingProvider(AppAuthProvider provider) {
-    switch (provider) {
-      case AppAuthProvider.google:
-        ref.read(authControllerProvider.notifier).signInWithGoogle();
-        break;
-      case AppAuthProvider.apple:
-        ref.read(authControllerProvider.notifier).signInWithApple();
-        break;
-      default:
-        widget.onFormTypeChange(AuthFormType.signIn);
-    }
+  Future<bool> _handleExistingProviders(List<AppAuthProvider> providers) async {
+    if (!mounted) return false;
+
+    await showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (context) => ProviderSelectionBottomSheet(providers: providers),
+    );
+
+    return false; // Don't proceed with form submission
   }
+
+  // void _handleExistingProvider(AppAuthProvider provider) {
+  //   switch (provider) {
+  //     case AppAuthProvider.google:
+  //       ref.read(authControllerProvider.notifier).signInWithGoogle();
+  //       break;
+  //     case AppAuthProvider.apple:
+  //       ref.read(authControllerProvider.notifier).signInWithApple();
+  //       break;
+  //     default:
+  //       widget.onFormTypeChange(AuthFormType.signIn);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

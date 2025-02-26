@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:social_app_2/src/features/auth/domain/app_user.dart';
 import 'package:social_app_2/src/features/auth/presentation/account/profile_controller.dart';
 
 part 'edit_profile_form.g.dart';
@@ -22,6 +23,10 @@ class EditProfileForm extends _$EditProfileForm {
     String? country,
     File? profileImage,
     File? backgroundImage,
+    required PrivacySettings privacySettings,
+    required NotificationSettings notificationSettings,
+    required bool isInfoShared,
+    required bool isChatEnabled,
   }) async {
     state = const AsyncValue.loading();
 
@@ -37,6 +42,10 @@ class EditProfileForm extends _$EditProfileForm {
             country: country,
             profileImage: profileImage,
             backgroundImage: backgroundImage,
+            privacySettings: privacySettings,
+            notificationSettings: notificationSettings,
+            isInfoShared: isInfoShared,
+            isChatEnabled: isChatEnabled,
           );
 
       state = const AsyncValue.data(null);

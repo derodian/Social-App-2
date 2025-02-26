@@ -6,7 +6,7 @@ part of 'edit_profile_form.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editProfileFormHash() => r'8613ee51a8d3a5e525763bee369623dda9ce8eb1';
+String _$editProfileFormHash() => r'923e6243ff75988e0c1ecaeb534254de062d950c';
 
 /// See also [EditProfileForm].
 @ProviderFor(EditProfileForm)
