@@ -80,11 +80,14 @@ dependencies:
   email_validator: 3.0.0
   rxdart: 0.28.0
   device_info_plus: 11.3.0
+  flutter_local_notifications_plus: 17.2.5
+  timeago: 3.2.2
   # Firebase
   firebase_core: 3.9.0
   firebase_auth: 5.3.4
   cloud_firestore: 5.6.0
   firebase_storage: 12.3.7
+  firebase_messaging: 15.1.2
 
 dev_dependencies:
   flutter_test:
