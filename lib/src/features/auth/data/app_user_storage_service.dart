@@ -409,7 +409,7 @@ class AppUserStorageService extends _$AppUserStorageService {
     if (uid != null) {
       final userDocRef = firestore.collection(usersPath()).doc(uid);
       final deviceTokenDocRef = userDocRef
-          .collection(FirebaseCollectionName.deviceToken)
+          .collection(FirebaseCollectionName.deviceTokens)
           .doc(deviceToken);
 
       batch.set(
@@ -424,7 +424,7 @@ class AppUserStorageService extends _$AppUserStorageService {
     }
 
     final deviceTokenDocRef = firestore
-        .collection(FirebaseCollectionName.deviceToken)
+        .collection(FirebaseCollectionName.deviceTokens)
         .doc(uid ?? deviceToken);
 
     batch.set(
@@ -580,7 +580,7 @@ class AppUserStorageService extends _$AppUserStorageService {
   Future createDeviceToken({required String token, UserID? userId}) async {
     try {
       await _firestore
-          .collection(FirebaseCollectionName.deviceToken)
+          .collection(FirebaseCollectionName.deviceTokens)
           .doc(userId ?? token)
           .set({
         FirestoreFieldName.deviceToken: token,

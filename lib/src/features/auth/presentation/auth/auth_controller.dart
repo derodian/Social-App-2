@@ -4,10 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:social_app_2/src/features/auth/data/app_user_storage_service.dart';
 import 'package:social_app_2/src/features/auth/data/auth_service.dart';
 import 'package:social_app_2/src/features/auth/data/firebase_auth_service.dart';
 import 'package:social_app_2/src/features/auth/domain/app_user.dart';
+import 'package:social_app_2/src/features/push_notification/data/notification_permission_manager.dart';
 import 'package:social_app_2/src/features/services/snackbar_service.dart';
 
 part 'auth_controller.g.dart';
@@ -198,7 +200,13 @@ class AuthController extends _$AuthController {
         email: email,
         password: password,
       );
+      await _saveCurrentUserIdToPrefs(user.id); // Save user ID to prefs
       _updateState(AsyncData(AuthUser(user)));
+      // TODO: comment bottom line after testing
+      // await resetNotificationPermissionTimestamp();
+      // await forceRequestNotificationPermission();
+      // Request notifications after sign-in
+      await requestNotificationPermission();
     } catch (e, st) {
       _updateState(AsyncError(e, st));
     }
@@ -226,7 +234,10 @@ class AuthController extends _$AuthController {
         displayName: displayName,
         phoneNumber: phoneNumber,
       );
+      await _saveCurrentUserIdToPrefs(user.id); // Save user ID to prefs
       _updateState(AsyncData(AuthUser(user)));
+      // Request notifications after sign-up
+      await requestNotificationPermission();
     } catch (e, st) {
       _updateState(AsyncError(e, st));
     }
@@ -270,7 +281,11 @@ class AuthController extends _$AuthController {
       final appUser =
           await _storage.createOrUpdateSocialUser(newUser!, provider);
 
+      await _saveCurrentUserIdToPrefs(appUser.id); // Save user ID to prefs
+
       _updateState(AsyncData(AuthUser(appUser)));
+      // Request notifications after social sign-in
+      await requestNotificationPermission();
     } catch (e, st) {
       _updateState(AsyncError(e, st));
     }
@@ -280,6 +295,9 @@ class AuthController extends _$AuthController {
     _updateState(const AsyncLoading());
     try {
       await _auth.signOut();
+      // Clear user ID from preferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('current_user_id');
       _updateState(const AsyncData(null));
     } catch (e, st) {
       debugPrint('AuthController: Sign out error - $e');
@@ -491,6 +509,52 @@ class AuthController extends _$AuthController {
     }
   }
 
+  // Push Notification
+  Future<void> requestNotificationPermission() async {
+    if (currentUser == null) return;
+
+    try {
+      final permissionManager = ref.read(notificationPermissionManagerProvider);
+      final granted =
+          await permissionManager.requestPermissionAfterSignIn(currentUser!.id);
+
+      if (granted) {
+        debugPrint(
+            'Notification permission granted for user: ${currentUser!.id}');
+      } else {
+        debugPrint('Notification permission denied by user');
+      }
+    } catch (e) {
+      debugPrint('Error requesting notification permission: $e');
+    }
+  }
+
+  Future<void> forceRequestNotificationPermission() async {
+    if (currentUser == null) return;
+
+    try {
+      final permissionManager = ref.read(notificationPermissionManagerProvider);
+      final granted =
+          await permissionManager.forceRequestPermission(currentUser!.id);
+
+      if (granted) {
+        debugPrint(
+            'Notification permission granted for user: ${currentUser!.id}');
+      } else {
+        debugPrint('Notification permission denied by user');
+      }
+    } catch (e) {
+      debugPrint('Error requesting notification permission: $e');
+    }
+  }
+
+  // Add this to your AuthController after successful sign-in
+  Future<void> resetNotificationPermissionTimestamp() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('last_notification_permission_request');
+    debugPrint('Reset notification permission timestamp');
+  }
+
   // Account Deletion
   Future<void> deleteAccount() async {
     _updateState(const AsyncLoading());
@@ -500,6 +564,17 @@ class AuthController extends _$AuthController {
     } catch (e, st) {
       _updateState(AsyncError(e, st));
       rethrow;
+    }
+  }
+
+  // Store user info in SharedPreferences
+  Future<void> _saveCurrentUserIdToPrefs(String userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('current_user_id', userId);
+      debugPrint('Saved current user ID to SharedPreferences: $userId');
+    } catch (e) {
+      debugPrint('Error saving user ID to preferences: $e');
     }
   }
 

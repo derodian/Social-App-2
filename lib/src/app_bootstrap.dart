@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_app_2/src/app.dart';
+import 'package:social_app_2/src/constants/keys.dart';
 import 'package:social_app_2/src/monitoring/error_logger.dart';
 import 'package:social_app_2/src/utils/string_hardcoded.dart';
 
@@ -21,7 +22,9 @@ class AppBootstrap {
 
     return UncontrolledProviderScope(
       container: container,
-      child: const MyApp(),
+      child: MyApp(
+        scaffoldMessengerKey: scaffoldMessengerKey,
+      ),
     );
   }
 

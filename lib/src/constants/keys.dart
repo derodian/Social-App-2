@@ -18,4 +18,12 @@ class Keys {
   static const String alertCancel = 'alertCancel';
 }
 
+/// Global key for displaying snackbars from anywhere in the app
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
+/// Global keys for app-wide access to key Flutter components
+class AppGlobalKey {
+  /// Main navigator key for the application
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+}

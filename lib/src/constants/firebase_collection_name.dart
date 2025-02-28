@@ -5,7 +5,7 @@ class FirebaseCollectionName {
   // for user information
   static const users = 'app_users';
   // for device token
-  static const deviceToken = "device_tokens";
+  static const deviceTokens = "device_tokens";
   // for member information
   static const members = 'members';
   // for committee information

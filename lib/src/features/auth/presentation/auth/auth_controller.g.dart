@@ -88,7 +88,7 @@ final isAdminProvider = AutoDisposeProvider<bool>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef IsAdminRef = AutoDisposeProviderRef<bool>;
-String _$authControllerHash() => r'34aa45bed93484c419142bb2f03e18d706182a25';
+String _$authControllerHash() => r'270548c924a2c094283c9bcc5d767e6ebdf404b1';
 
 /// See also [AuthController].
 @ProviderFor(AuthController)

@@ -296,7 +296,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   void initState() {
     super.initState();
-    debugPrint('isPassword for ${widget.label}: ${widget.isPassword}');
+    // debugPrint('isPassword for ${widget.label}: ${widget.isPassword}');
     _obscureText = widget.isPassword;
     _isFocused = true;
     hintText = widget.helperText;

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_app_2/src/constants/keys.dart';
 import 'package:social_app_2/src/constants/strings.dart';
 import 'package:social_app_2/src/routing/app_router.dart';
 import 'package:social_app_2/src/utils/app_theme_data.dart';
 import 'package:social_app_2/src/utils/string_hardcoded.dart';
 
 class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
+
+  const MyApp({
+    super.key,
+    required this.scaffoldMessengerKey,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

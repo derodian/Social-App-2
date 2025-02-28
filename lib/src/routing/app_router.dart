@@ -415,6 +415,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter/material.dart';
 import 'package:social_app_2/src/common_widgets/error_screen.dart';
+import 'package:social_app_2/src/constants/keys.dart';
 import 'package:social_app_2/src/features/auth/domain/app_user.dart';
 import 'package:social_app_2/src/features/auth/presentation/account/edit_profile_screen.dart';
 import 'package:social_app_2/src/features/auth/presentation/account/profile_screen.dart';
@@ -609,10 +610,10 @@ part 'app_router.g.dart';
 // }
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
-  final rootNavigatorKey = GlobalKey<NavigatorState>();
+  // final rootNavigatorKey = GlobalKey<NavigatorState>();
 
   return GoRouter(
-    navigatorKey: rootNavigatorKey,
+    navigatorKey: AppGlobalKey.navigatorKey,
     debugLogDiagnostics: true,
     initialLocation: AppRoute.root.path,
     // Redirect Logic

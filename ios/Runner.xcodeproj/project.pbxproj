@@ -526,6 +526,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4EAE6B5C4C1CCF22837098C7 /* Pods-Runner.debug-dev.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -536,6 +537,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AC41997514A435B2ADDAB126 /* Pods-Runner.profile-dev.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -546,6 +548,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0E2EA058106D9CACBB7F50B5 /* Pods-Runner.release-dev.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -556,6 +559,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6903FC470B115A01B3C57A16 /* Pods-Runner.debug-stg.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -566,6 +570,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C0D5053C67D422821F2F45E7 /* Pods-Runner.profile-stg.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -576,6 +581,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DC26F6B80C363CD8386B2D88 /* Pods-Runner.release-stg.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -586,6 +592,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D3FF0B887EE432BA55CA7176 /* Pods-Runner.debug-prod.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -596,6 +603,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 112BD35F53771CA17C78596B /* Pods-Runner.profile-prod.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -606,6 +614,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8BDCB049B6644FE26C9814AF /* Pods-Runner.release-prod.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				DEVELOPMENT_TEAM = 99KS3K2VX4;
 				PRODUCT_NAME = Runner;
@@ -741,6 +750,7 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
@@ -1284,6 +1294,7 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
@@ -1308,6 +1319,7 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";

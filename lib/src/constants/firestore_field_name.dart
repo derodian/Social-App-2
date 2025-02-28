@@ -45,6 +45,8 @@ class FirestoreFieldName {
   static const String emailNotifications = 'email_notifications';
   static const String pushNotifications = 'push_notifications';
   static const String inAppNotifications = 'in_app_notifications';
+  static const String notificationsEnabled = 'notification_enabled';
+  static const String notificationCategories = 'notification_categories';
 
   // Privacy settings fields
   static const String profileVisibleToPublic = 'profile_visible_to_public';
@@ -59,10 +61,15 @@ class FirestoreFieldName {
   static const userSettings = 'user_settings';
   static const userPreferences = 'user_preferences';
 
+  // Device & Token
+  static const String token = 'token';
+  static const String deviceInfo = 'device_info';
+
   // ID
 
   // Dates
   static const date = 'date';
+  static const String lastActiveAt = 'last_active_at';
   static const updatedDate = 'update_date';
   static const postDate = 'post_date';
   static const lastUpdateAt = 'last_update_at';
