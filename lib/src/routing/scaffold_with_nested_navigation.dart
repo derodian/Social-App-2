@@ -119,6 +119,16 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
                 selectedIcon: const Icon(Icons.view_headline),
                 label: Text('Events'.hardcoded),
               ),
+              NavigationRailDestination(
+                icon: const Icon(Icons.view_headline_outlined),
+                selectedIcon: const Icon(Icons.view_headline),
+                label: Text('Insta'.hardcoded),
+              ),
+              NavigationRailDestination(
+                icon: const Icon(Icons.view_headline_outlined),
+                selectedIcon: const Icon(Icons.view_headline),
+                label: Text('Photos'.hardcoded),
+              ),
             ],
           ),
           const VerticalDivider(thickness: 1, width: 1),
@@ -131,3 +141,44 @@ class ScaffoldWithNavigationRail extends StatelessWidget {
     );
   }
 }
+
+// import 'package:flutter/material.dart';
+// import 'package:go_router/go_router.dart';
+
+// class ScaffoldWithNestedNavigation extends StatelessWidget {
+//   const ScaffoldWithNestedNavigation({
+//     super.key,
+//     required this.navigationShell,
+//   });
+
+//   final StatefulNavigationShell navigationShell;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: navigationShell, // This is important - use the shell directly here
+//       bottomNavigationBar: NavigationBar(
+//         selectedIndex: navigationShell.currentIndex,
+//         destinations: const [
+//           NavigationDestination(
+//             icon: Icon(Icons.work_outline),
+//             selectedIcon: Icon(Icons.work),
+//             label: 'News',
+//           ),
+//           NavigationDestination(
+//             icon: Icon(Icons.view_headline_outlined),
+//             selectedIcon: Icon(Icons.view_headline),
+//             label: 'Events',
+//           ),
+//         ],
+//         onDestinationSelected: (index) {
+//           navigationShell.goBranch(
+//             index,
+//             // This allows tapping the current tab to reset navigation
+//             initialLocation: index == navigationShell.currentIndex,
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }

@@ -7,7 +7,7 @@ part of 'app_user_storage_service.dart';
 // **************************************************************************
 
 String _$appUserStorageServiceHash() =>
-    r'9cd0c445ffdb4044df43c064dc0dcb8112950480';
+    r'4d94e3c639dde36731c9d590fe63cbd4b661cb88';
 
 /// Class for handling User info
 ///

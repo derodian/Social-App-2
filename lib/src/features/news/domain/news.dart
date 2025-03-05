@@ -1,145 +1,80 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:social_app_2/src/constants/firestore_field_name.dart';
 import 'package:social_app_2/src/features/news/typedefs/news_id.dart';
 
-class News extends Equatable {
-  final NewsID id;
-  final String listTitle;
-  final String postedBy;
-  final String? type;
-  final String title;
-  final String newsDetails;
-  final String? imageUrl;
-  final String? imageFileName;
-  final DateTime postDate;
-  final DateTime lastUpdated;
-  final String? location;
-  final String? address;
-  final String? city;
-  final String? state;
-  final String? zip;
-  final int views;
+part 'news.freezed.dart';
+part 'news.g.dart';
 
-  const News({
-    required this.id,
-    required this.listTitle,
-    required this.postedBy,
-    this.type,
-    required this.title,
-    required this.newsDetails,
-    this.imageUrl,
-    this.imageFileName,
-    required this.postDate,
-    required this.lastUpdated,
-    this.location,
-    this.address,
-    this.city,
-    this.state,
-    this.zip,
-    this.views = 0,
-  });
+@freezed
+class News with _$News {
+  const News._();
 
-  factory News.fromMap(Map<String, dynamic> map) {
-    return News(
-      id: map[FirestoreFieldName.newsId] as String,
-      listTitle: map[FirestoreFieldName.newsListTitle] as String,
-      postedBy: map[FirestoreFieldName.newsPostedBy] as String,
-      type: map[FirestoreFieldName.newsType] as String?,
-      title: map[FirestoreFieldName.newsTitle] as String,
-      newsDetails: map[FirestoreFieldName.newsDetails] as String,
-      imageUrl: map[FirestoreFieldName.newsImageUrl] as String?,
-      imageFileName: map[FirestoreFieldName.newsImageFileName] as String?,
-      postDate: DateTime.fromMillisecondsSinceEpoch(
-          map[FirestoreFieldName.newsPostDate]),
-      lastUpdated: DateTime.fromMillisecondsSinceEpoch(
-          map[FirestoreFieldName.newsLastUpdateAt]),
-      location: map[FirestoreFieldName.newsLocation] as String?,
-      address: map[FirestoreFieldName.newsAddress] as String?,
-      city: map[FirestoreFieldName.city] as String?,
-      state: map[FirestoreFieldName.state] as String?,
-      zip: map[FirestoreFieldName.zip] as String?,
-      views: (map[FirestoreFieldName.newsViews] as int?) ?? 0,
-    );
+  const factory News({
+    @JsonKey(name: FirestoreFieldName.id) required NewsID id,
+    @JsonKey(name: FirestoreFieldName.newsListTitle) required String listTitle,
+    @JsonKey(name: FirestoreFieldName.newsPostedBy) required String postedBy,
+    @JsonKey(name: FirestoreFieldName.newsType) String? type,
+    @JsonKey(name: FirestoreFieldName.newsTitle) required String title,
+    @JsonKey(name: FirestoreFieldName.newsDetails) required String newsDetails,
+    @JsonKey(name: FirestoreFieldName.newsImageUrl) String? imageUrl,
+    @JsonKey(name: FirestoreFieldName.newsImageFileName) String? imageFileName,
+    @JsonKey(name: FirestoreFieldName.newsPostDate) required DateTime postDate,
+    @JsonKey(name: FirestoreFieldName.newsLastUpdateAt)
+    required DateTime lastUpdated,
+    @JsonKey(name: FirestoreFieldName.newsLocation) String? location,
+    @JsonKey(name: FirestoreFieldName.newsAddress) String? address,
+    @JsonKey(name: FirestoreFieldName.city) String? city,
+    @JsonKey(name: FirestoreFieldName.state) String? state,
+    @JsonKey(name: FirestoreFieldName.zip) String? zip,
+    @JsonKey(name: FirestoreFieldName.newsViews) @Default(0) int views,
+    @JsonKey(name: FirestoreFieldName.newsIsPublished)
+    @Default(true)
+    bool isPublished,
+    @JsonKey(name: FirestoreFieldName.newsTags) @Default([]) List<String> tags,
+    @JsonKey(name: FirestoreFieldName.newsCommentsEnabled)
+    @Default(true)
+    bool commentsEnabled,
+    @JsonKey(name: FirestoreFieldName.newsReactions)
+    @Default({})
+    Map<String, int> reactions,
+    @JsonKey(name: FirestoreFieldName.newsPriority) @Default(0) int priority,
+  }) = _News;
+
+  factory News.fromJson(Map<String, dynamic> json) => _$NewsFromJson(json);
+
+  // Custom factory constructor from Firestore
+  factory News.fromFirestore(Map<String, dynamic> data, String id) {
+    // Convert Firestore Timestamp to DateTime
+    final postDateTimestamp = data[FirestoreFieldName.newsPostDate];
+    final lastUpdatedTimestamp = data[FirestoreFieldName.newsLastUpdateAt];
+
+    // Create a modified map with converted dates
+    final Map<String, dynamic> jsonData = {
+      FirestoreFieldName.id: id,
+      ...data,
+      FirestoreFieldName.newsPostDate: postDateTimestamp != null
+          ? (postDateTimestamp is DateTime
+              ? postDateTimestamp
+              : postDateTimestamp.toDate())
+          : DateTime.now(),
+      FirestoreFieldName.newsLastUpdateAt: lastUpdatedTimestamp != null
+          ? (lastUpdatedTimestamp is DateTime
+              ? lastUpdatedTimestamp
+              : lastUpdatedTimestamp.toDate())
+          : DateTime.now(),
+    };
+
+    return News.fromJson(jsonData);
   }
 
-  Map<String, dynamic> toMap() => {
-        FirestoreFieldName.newsId: id,
-        FirestoreFieldName.newsListTitle: listTitle,
-        FirestoreFieldName.newsPostedBy: postedBy,
-        FirestoreFieldName.newsType: type,
-        FirestoreFieldName.newsTitle: title,
-        FirestoreFieldName.newsDetails: newsDetails,
-        FirestoreFieldName.newsImageUrl: imageUrl,
-        FirestoreFieldName.newsImageFileName: imageFileName,
-        FirestoreFieldName.newsPostDate: postDate.millisecondsSinceEpoch,
-        FirestoreFieldName.newsLastUpdateAt: lastUpdated.millisecondsSinceEpoch,
-        FirestoreFieldName.newsLocation: location,
-        FirestoreFieldName.newsAddress: address,
-        FirestoreFieldName.city: city,
-        FirestoreFieldName.state: state,
-        FirestoreFieldName.zip: zip,
-        FirestoreFieldName.newsViews: views,
-      };
+  // Convert to Firestore map
+  Map<String, dynamic> toFirestore() {
+    final json = toJson();
 
-  News copyWith({
-    NewsID? id,
-    String? listTitle,
-    String? postedBy,
-    String? type,
-    String? title,
-    String? newsDetails,
-    String? imageUrl,
-    String? imageFileName,
-    DateTime? postDate,
-    DateTime? lastUpdated,
-    String? location,
-    String? address,
-    String? city,
-    String? state,
-    String? zip,
-    int? views,
-  }) {
-    return News(
-      id: id ?? this.id,
-      listTitle: listTitle ?? this.listTitle,
-      postedBy: postedBy ?? this.postedBy,
-      type: type ?? this.type,
-      title: title ?? this.title,
-      newsDetails: newsDetails ?? this.newsDetails,
-      imageUrl: imageUrl ?? this.imageUrl,
-      imageFileName: imageFileName ?? this.imageFileName,
-      postDate: postDate ?? this.postDate,
-      lastUpdated: lastUpdated ?? this.lastUpdated,
-      location: location ?? this.location,
-      address: address ?? this.address,
-      city: city ?? this.city,
-      state: state ?? this.state,
-      zip: zip ?? this.zip,
-      views: views ?? this.views,
-    );
+    // Convert DateTime to Timestamp
+    // Note: This depends on how your Firestore serializer handles DateTime
+    // If you need explicit Timestamp conversion, do it here
+
+    return json;
   }
-
-  @override
-  List<Object?> get props => [
-        id,
-        listTitle,
-        postedBy,
-        title,
-        type,
-        newsDetails,
-        imageUrl,
-        imageFileName,
-        postDate,
-        lastUpdated,
-        location,
-        address,
-        city,
-        state,
-        zip,
-        views,
-      ];
-
-  @override
-  bool? get stringify => true;
 }

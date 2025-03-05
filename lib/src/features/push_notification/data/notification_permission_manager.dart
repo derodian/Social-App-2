@@ -14,7 +14,9 @@ import 'package:social_app_2/src/constants/keys.dart';
 import 'package:social_app_2/src/features/auth/typedefs/user_id.dart';
 import 'package:social_app_2/src/features/push_notification/domain/notification_category.dart';
 import 'package:social_app_2/src/features/push_notification/presentation/permission_dialog.dart';
+import 'package:social_app_2/src/features/services/dialog_service.dart';
 import 'package:social_app_2/src/features/services/logger.dart';
+import 'package:social_app_2/src/routing/app_router.dart';
 
 part 'notification_permission_manager.g.dart';
 
@@ -612,23 +614,29 @@ class NotificationPermissionManager extends _$NotificationPermissionManager {
   /// Show custom permission dialog
   Future<bool> _showCustomPermissionDialog() async {
     // Check if we have a valid navigator key and context
-    final navigatorContext = AppGlobalKey.navigatorKey.currentContext;
-    if (navigatorContext == null) {
-      debugPrint(
-          'No valid context found for permission dialog, defaulting to false');
-      return false;
-    }
+    // final navigatorKey = ref.watch(rootNavigatorKeyProvider);
+    // final rootNavKeyCurrentContext = rootNavigatorKey.currentContext;
+    // if (rootNavKeyCurrentContext == null) {
+    //   debugPrint(
+    //       'No valid context found for permission dialog, defaulting to false');
+    //   return false;
+    // }
 
     try {
-      final result =
-          await Navigator.of(navigatorContext, rootNavigator: true).push<bool>(
-        MaterialPageRoute(
-          builder: (context) => const NotificationPermissionDialog(),
-          fullscreenDialog: true,
-        ),
-      );
+      // final result =
+      //     await Navigator.of(rootNavKeyCurrentContext, rootNavigator: true)
+      //         .push<bool>(
+      //   MaterialPageRoute(
+      //     builder: (context) => const NotificationPermissionDialog(),
+      //     fullscreenDialog: true,
+      //   ),
+      // );
+      final result = ref
+          .read(dialogServiceProvider.notifier)
+          .showNotificationPermissionDialog();
 
-      return result ?? false;
+      // return result ?? false;
+      return result;
     } catch (e) {
       debugPrint('Error showing permission dialog: $e');
       return false;

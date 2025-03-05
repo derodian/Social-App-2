@@ -158,7 +158,7 @@ class AppUserStorageService extends _$AppUserStorageService {
     }
 
     return query
-        .orderBy('lastLoginAt', descending: true)
+        .orderBy(FirestoreFieldName.lastLoginDate, descending: true)
         .limit(limit)
         .snapshots()
         .map((snapshot) => snapshot.docs
@@ -182,7 +182,7 @@ class AppUserStorageService extends _$AppUserStorageService {
 
     return _usersCollection
         .where('searchTerms', arrayContains: term)
-        .orderBy('lastLoginAt', descending: true)
+        .orderBy(FirestoreFieldName.lastLoginDate, descending: true)
         .limit(limit)
         .snapshots()
         .map((snapshot) => snapshot.docs
@@ -220,7 +220,9 @@ class AppUserStorageService extends _$AppUserStorageService {
       query = _applyFilters(query, filter);
     }
 
-    final snapshot = await query.orderBy('lastLoginAt', descending: true).get();
+    final snapshot = await query
+        .orderBy(FirestoreFieldName.lastLoginDate, descending: true)
+        .get();
     final users = snapshot.docs
         .map((doc) => doc.toAppUser())
         .whereType<AppUser>()
@@ -276,7 +278,9 @@ class AppUserStorageService extends _$AppUserStorageService {
       query = _applyFilters(query, filter);
     }
 
-    query = query.orderBy('lastLoginAt', descending: true).limit(limit);
+    query = query
+        .orderBy(FirestoreFieldName.lastLoginDate, descending: true)
+        .limit(limit);
 
     if (startAfter != null) {
       query = query.startAfterDocument(startAfter);
@@ -302,33 +306,38 @@ class AppUserStorageService extends _$AppUserStorageService {
     AppUserFilter filter,
   ) {
     if (filter.isEmailVerified != null) {
-      query = query.where('isEmailVerified', isEqualTo: filter.isEmailVerified);
+      query = query.where(FirestoreFieldName.isEmailVerified,
+          isEqualTo: filter.isEmailVerified);
     }
     if (filter.isAdminApproved != null) {
-      query = query.where('isAdminApproved', isEqualTo: filter.isAdminApproved);
+      query = query.where(FirestoreFieldName.isApproved,
+          isEqualTo: filter.isAdminApproved);
     }
     if (filter.isAdmin != null) {
-      query = query.where('isAdmin', isEqualTo: filter.isAdmin);
+      query =
+          query.where(FirestoreFieldName.isAdmin, isEqualTo: filter.isAdmin);
     }
     if (filter.provider != null) {
-      query = query.where('provider', isEqualTo: filter.provider?.name);
+      query = query.where(FirestoreFieldName.provider,
+          isEqualTo: filter.provider?.name);
     }
     if (filter.domain != null) {
       query = query
-          .where('email', isGreaterThanOrEqualTo: filter.domain)
-          .where('email', isLessThan: '${filter.domain}z');
+          .where(FirestoreFieldName.email,
+              isGreaterThanOrEqualTo: filter.domain)
+          .where(FirestoreFieldName.email, isLessThan: '${filter.domain}z');
     }
     if (filter.searchTerm?.isNotEmpty ?? false) {
       final searchTerms = _generateSearchTerms(filter.searchTerm!);
       query = query.where('searchTerms', arrayContainsAny: searchTerms);
     }
     if (filter.createdAfter != null) {
-      query =
-          query.where('createdAt', isGreaterThanOrEqualTo: filter.createdAfter);
+      query = query.where(FirestoreFieldName.createDate,
+          isGreaterThanOrEqualTo: filter.createdAfter);
     }
     if (filter.createdBefore != null) {
-      query =
-          query.where('createdAt', isLessThanOrEqualTo: filter.createdBefore);
+      query = query.where(FirestoreFieldName.createDate,
+          isLessThanOrEqualTo: filter.createdBefore);
     }
 
     // Apply sorting
@@ -778,7 +787,7 @@ class AppUserStorageService extends _$AppUserStorageService {
   Future<bool> checkEmailExists(String email) async {
     try {
       final querySnapshot = await _usersCollection
-          .where('email', isEqualTo: email)
+          .where(FirestoreFieldName.email, isEqualTo: email)
           .limit(1)
           .get();
       return querySnapshot.docs.isNotEmpty;
@@ -1011,8 +1020,8 @@ class AppUserStorageService extends _$AppUserStorageService {
 
         // Delete old image if exists
         try {
-          final oldImageUrl =
-              userSnapshot.data()?['profileImageUrl'] as String?;
+          final oldImageUrl = userSnapshot
+              .data()?[FirestoreFieldName.profileImageUrl] as String?;
           if (oldImageUrl != null) {
             await _storage.refFromURL(oldImageUrl).delete();
           }
@@ -1025,7 +1034,7 @@ class AppUserStorageService extends _$AppUserStorageService {
           SettableMetadata(
             contentType: 'image/jpeg',
             customMetadata: {
-              'uploadedAt': DateTime.now().toIso8601String(),
+              'upload_date': DateTime.now().toIso8601String(),
               'userId': userId,
             },
           ),
@@ -1036,8 +1045,8 @@ class AppUserStorageService extends _$AppUserStorageService {
 
         // Update user document with new image URL
         transaction.update(userDoc, {
-          'profileImageUrl': downloadUrl,
-          'lastUpdatedAt': FieldValue.serverTimestamp(),
+          FirestoreFieldName.profileImageUrl: downloadUrl,
+          FirestoreFieldName.lastUpdateDate: FieldValue.serverTimestamp(),
         });
 
         return downloadUrl;
@@ -1071,8 +1080,8 @@ class AppUserStorageService extends _$AppUserStorageService {
 
         // Delete old image if exists
         try {
-          final oldImageUrl =
-              userSnapshot.data()?['profileBackgroundUrl'] as String?;
+          final oldImageUrl = userSnapshot
+              .data()?[FirestoreFieldName.profileBannerImageUrl] as String?;
           if (oldImageUrl != null) {
             await _storage.refFromURL(oldImageUrl).delete();
           }
@@ -1085,7 +1094,7 @@ class AppUserStorageService extends _$AppUserStorageService {
           SettableMetadata(
             contentType: 'image/jpeg',
             customMetadata: {
-              'uploadedAt': DateTime.now().toIso8601String(),
+              'upload_date': DateTime.now().toIso8601String(),
               'userId': userId,
             },
           ),
@@ -1096,8 +1105,8 @@ class AppUserStorageService extends _$AppUserStorageService {
 
         // Update user document with new image URL
         transaction.update(userDoc, {
-          'profileBackgroundUrl': downloadUrl,
-          'lastUpdatedAt': FieldValue.serverTimestamp(),
+          FirestoreFieldName.profileBannerImageUrl: downloadUrl,
+          FirestoreFieldName.lastUpdateDate: FieldValue.serverTimestamp(),
         });
 
         return downloadUrl;
@@ -1120,15 +1129,15 @@ class AppUserStorageService extends _$AppUserStorageService {
           throw Exception('User does not exist');
         }
 
-        final imageUrl = userSnapshot.data()?['profileImageUrl'] as String?;
+        final imageUrl = userSnapshot.data()?['profile_image_url'] as String?;
         if (imageUrl != null) {
           // Delete from storage
           await _storage.refFromURL(imageUrl).delete();
 
           // Update user document
           transaction.update(userDoc, {
-            'profileImageUrl': FieldValue.delete(),
-            'lastUpdatedAt': FieldValue.serverTimestamp(),
+            FirestoreFieldName.profileImageUrl: FieldValue.delete(),
+            FirestoreFieldName.lastUpdateDate: FieldValue.serverTimestamp(),
           });
         }
       });
@@ -1147,16 +1156,16 @@ class AppUserStorageService extends _$AppUserStorageService {
           throw Exception('User does not exist');
         }
 
-        final imageUrl =
-            userSnapshot.data()?['profileBackgroundUrl'] as String?;
+        final imageUrl = userSnapshot
+            .data()?[FirestoreFieldName.profileBannerImageUrl] as String?;
         if (imageUrl != null) {
           // Delete from storage
           await _storage.refFromURL(imageUrl).delete();
 
           // Update user document
           transaction.update(userDoc, {
-            'profileBackgroundUrl': FieldValue.delete(),
-            'lastUpdatedAt': FieldValue.serverTimestamp(),
+            FirestoreFieldName.profileBannerImageUrl: FieldValue.delete(),
+            FirestoreFieldName.lastUpdateDate: FieldValue.serverTimestamp(),
           });
         }
       });
@@ -1177,8 +1186,10 @@ class AppUserStorageService extends _$AppUserStorageService {
         }
 
         final data = userSnapshot.data()!;
-        final profileImageUrl = data['profileImageUrl'] as String?;
-        final backgroundImageUrl = data['profileBackgroundUrl'] as String?;
+        final profileImageUrl =
+            data[FirestoreFieldName.profileImageUrl] as String?;
+        final backgroundImageUrl =
+            data[FirestoreFieldName.profileBannerImageUrl] as String?;
 
         // Delete images from storage
         if (profileImageUrl != null) {
@@ -1190,9 +1201,9 @@ class AppUserStorageService extends _$AppUserStorageService {
 
         // Update user document
         transaction.update(userDoc, {
-          'profileImageUrl': FieldValue.delete(),
-          'profileBackgroundUrl': FieldValue.delete(),
-          'lastUpdatedAt': FieldValue.serverTimestamp(),
+          FirestoreFieldName.profileImageUrl: FieldValue.delete(),
+          FirestoreFieldName.profileBannerImageUrl: FieldValue.delete(),
+          FirestoreFieldName.lastUpdateDate: FieldValue.serverTimestamp(),
         });
       });
     } on FirebaseException catch (e) {
@@ -1226,14 +1237,14 @@ class AppUserStorageService extends _$AppUserStorageService {
       }
 
       final updates = <String, dynamic>{
-        'lastUpdatedAt': FieldValue.serverTimestamp(),
+        FirestoreFieldName.lastUpdateDate: FieldValue.serverTimestamp(),
       };
 
       if (profileImageUrl != null) {
-        updates['profileImageUrl'] = profileImageUrl;
+        updates[FirestoreFieldName.profileImageUrl] = profileImageUrl;
       }
       if (backgroundImageUrl != null) {
-        updates['profileBackgroundUrl'] = backgroundImageUrl;
+        updates[FirestoreFieldName.profileBannerImageUrl] = backgroundImageUrl;
       }
 
       transaction.update(userDoc, updates);

@@ -7,7 +7,7 @@ part of 'notification_permission_manager.dart';
 // **************************************************************************
 
 String _$notificationPermissionManagerHash() =>
-    r'8bd832b185f37902b2d0a39d761749f9cc6b89ec';
+    r'bbf17d5a98e596818ac9c2b72a1df8c737a9052d';
 
 /// Class to manage push notification permissions and device tokens
 ///

@@ -63,6 +63,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
+      centerTitle: true,
       actions: [
         if (showSaveButton)
           Container(

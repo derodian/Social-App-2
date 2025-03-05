@@ -14,12 +14,16 @@ class FirebaseCollectionName {
   static const news = 'news';
   // for events
   static const events = 'events';
+  // for insta
+  static const insta = 'insta';
+  // for events
+  static const photos = 'photos';
   // for posts
   static const posts = 'posts';
   // for comments
   static const comments = 'comments';
-  // for likes
-  static const likes = 'likes';
+  // for likes/reactions
+  static const reactions = 'reactions';
   // for thumbnails
   static const thumbnails = 'thumbnails';
   // for user profile image

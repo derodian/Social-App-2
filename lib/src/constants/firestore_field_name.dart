@@ -52,14 +52,14 @@ class FirestoreFieldName {
   static const String profileVisibleToPublic = 'profile_visible_to_public';
   static const String hideOnlineStatus = 'hide_online_status';
   static const String hideLastSeen = 'hide_last_seen';
-  static const userId = 'id';
-  static const deviceToken = 'fcm_device_token';
-  static const apnsToken = 'apns_token';
-  static const platform = 'platform';
-  static const photoURL = 'photo_url';
-  static const state = 'state';
-  static const userSettings = 'user_settings';
-  static const userPreferences = 'user_preferences';
+  static const String userId = 'user_id';
+  static const String deviceToken = 'fcm_device_token';
+  static const String apnsToken = 'apns_token';
+  static const String platform = 'platform';
+  static const String photoURL = 'photo_url';
+  static const String state = 'state';
+  static const String userSettings = 'user_settings';
+  static const String userPreferences = 'user_preferences';
 
   // Device & Token
   static const String token = 'token';
@@ -68,95 +68,115 @@ class FirestoreFieldName {
   // ID
 
   // Dates
-  static const date = 'date';
+  static const String date = 'date';
   static const String lastActiveAt = 'last_active_at';
-  static const updatedDate = 'update_date';
-  static const postDate = 'post_date';
-  static const lastUpdateAt = 'last_update_at';
-  static const newsPostDate = "post_date";
-  static const newsLastUpdateAt = "last_update_at";
-  static const eventPostDate = "post_date";
-  static const eventLastUpdateAt = "last_update_at";
-  static const eventStartDate = "start_date";
-  static const eventEndDate = "end_date";
-  static const committeeMemberSince = "member_since";
-  static const committeeMemberPostDate = "post_date";
-  static const committeeMemberUpdateDate = "update_date";
-  static const membershipStartDate = "membership_start_date";
-  static const membershipEndDate = "membership_end_date";
-  static const paymentEntryDate = "payment_entry_date";
-  static const paymentDate = "payment_date";
-  static const dueDate = "due_date";
+  static const String updatedDate = 'update_date';
+  static const String postDate = 'post_date';
+  static const String lastUpdateAt = 'last_update_at';
+  static const String newsPostDate = "post_date";
+  static const String newsLastUpdateAt = "last_update_at";
+  static const String eventPostDate = "post_date";
+  static const String eventLastUpdateAt = "last_update_at";
+  static const String eventStartDate = "start_date";
+  static const String eventEndDate = "end_date";
+  static const String committeeMemberSince = "member_since";
+  static const String committeeMemberPostDate = "post_date";
+  static const String committeeMemberUpdateDate = "update_date";
+  static const String membershipStartDate = "membership_start_date";
+  static const String membershipEndDate = "membership_end_date";
+  static const String paymentEntryDate = "payment_entry_date";
+  static const String paymentDate = "payment_date";
+  static const String dueDate = "due_date";
 
   // Insta_Post
-  static const postId = 'post_id';
-  static const comment = 'comment';
+  static const String postId = 'post_id';
+  static const String comment = 'comment';
 
   // Common
-  static const postedBy = 'posted_by';
-  static const imageURL = 'image_url';
-  static const imageFileName = 'image_filename';
+  static const String postedBy = 'posted_by';
+  static const String imageURL = 'image_url';
+  static const String imageFileName = 'image_filename';
 
-  static const location = 'location';
-  static const address = 'address';
+  static const String location = 'location';
+  static const String address = 'address';
 
   // News
-  static const newsId = 'news_id';
-  static const newsTitle = 'title';
-  static const newsShortDescription = 'short_description';
-  static const newsDetails = 'news_details';
-  static const newsType = 'news_type';
-  static const newsListTitle = "list_title";
-  static const newsPostedBy = "posted_by";
-  static const newsImageUrl = "image_url";
-  static const newsImageFileName = "image_filename";
-  static const newsLocation = "location";
-  static const newsAddress = "address";
-  static const newsViews = "news_views";
+  static const String newsId = 'news_id';
+  static const String newsTitle = 'title';
+  static const String newsShortDescription = 'short_description';
+  static const String newsDetails = 'news_details';
+  static const String newsType = 'news_type';
+  static const String newsListTitle = "list_title";
+  static const String newsPostedBy = "posted_by";
+  static const String newsImageUrl = "image_url";
+  static const String newsImageFileName = "image_filename";
+  static const String newsLocation = "location";
+  static const String newsAddress = "address";
+  static const String newsViews = "news_views";
+  static const String newsIsPublished = 'is_published';
+  static const String newsTags = 'tags';
+  static const String newsCommentsEnabled = 'comments_enabled';
+  static const String newsReactions = 'reactions';
+  static const String newsPriority = 'priority';
 
   // Event
-  static const eventId = "event_id";
-  static const eventListTitle = "list_title";
-  static const eventPostedBy = "posted_by";
-  static const eventType = "type";
-  static const eventTitle = "title";
-  static const eventStatus = "status";
-  static const eventDetails = "event_details";
-  static const eventImageUrl = "image_url";
-  static const eventImageFileName = "image_filename";
-  static const eventLocation = "location";
-  static const eventAddress = "address";
-  static const eventCity = "city";
-  static const eventState = "state";
-  static const eventZip = "zip";
-  static const eventViews = "event_views";
+  static const String eventId = "event_id";
+  static const String eventListTitle = "list_title";
+  static const String eventPostedBy = "posted_by";
+  static const String eventType = "type";
+  static const String eventTitle = "title";
+  static const String eventStatus = "status";
+  static const String eventDetails = "event_details";
+  static const String eventImageUrl = "image_url";
+  static const String eventImageFileName = "image_filename";
+  static const String eventLocation = "location";
+  static const String eventAddress = "address";
+  static const String eventCity = "city";
+  static const String eventState = "state";
+  static const String eventZip = "zip";
+  static const String eventViews = "event_views";
 
   // Committee Member
-  static const committeeMemberId = "id";
-  static const committeeMemberUserId = "user_id";
-  static const committeeMemberTitle = "title";
-  static const committeeMemberName = "name";
-  static const committeeMemberEmail = "email";
-  static const committeeMemberPhoneNumber = "phone_number";
-  static const committeeMemberTitleId = "title_id";
-  static const committeeMemberPhotoUrl = "photo_url";
-  static const committeeMemberPostedBy = "posted_by";
-  static const committeeMemberPhotoFileName = "photo_filename";
-  static const committeeMemberStreet = "street";
-  static const committeeMemberCity = "city";
-  static const committeeMemberState = "state";
-  static const committeeMemberZip = "zip";
+  static const String committeeMemberId = "id";
+  static const String committeeMemberUserId = "user_id";
+  static const String committeeMemberTitle = "title";
+  static const String committeeMemberName = "name";
+  static const String committeeMemberEmail = "email";
+  static const String committeeMemberPhoneNumber = "phone_number";
+  static const String committeeMemberTitleId = "title_id";
+  static const String committeeMemberPhotoUrl = "photo_url";
+  static const String committeeMemberPostedBy = "posted_by";
+  static const String committeeMemberPhotoFileName = "photo_filename";
+  static const String committeeMemberStreet = "street";
+  static const String committeeMemberCity = "city";
+  static const String committeeMemberState = "state";
+  static const String committeeMemberZip = "zip";
+
+  // Comments
+  static const String contentId = 'content_id';
+  static const String commentText = 'text';
+  static const String commentCreatedAt = 'created_at';
+  static const String commentUpdatedAt = 'updated_at';
+  static const String commentUserName = 'user_name';
+  static const String commentUserProfileImage = 'user_profile_image';
+  static const String commentLikes = 'likes';
+  static const String commentIsEdited = 'is_edited';
+  static const String commentParentId = 'parent_id';
+  static const String commentReactions = 'reactions';
+  static const String commentIsDeleted = 'is_deleted';
+  static const String contentType =
+      'content_type'; // new field to distinguish content types
 
   // Family
-  static const primaryAccountId = "primary_account_id";
-  static const memberAccountIds = "member_account_ids";
+  static const String primaryAccountId = "primary_account_id";
+  static const String memberAccountIds = "member_account_ids";
 
   // Membership payment
-  static const paymentId = "payment_id";
-  static const amountPaid = "amount_paid";
-  static const amountBalance = "amount_balance";
-  static const paymentMethod = "payment_method";
-  static const paymentDescription = "payment_description";
+  static const String paymentId = "payment_id";
+  static const String amountPaid = "amount_paid";
+  static const String amountBalance = "amount_balance";
+  static const String paymentMethod = "payment_method";
+  static const String paymentDescription = "payment_description";
 
   const FirestoreFieldName._();
 }
